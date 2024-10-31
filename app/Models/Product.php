@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\IsAvailable;
 use App\Enums\IsDeleted;
 use App\Enums\SoldByQuantity;
 use Illuminate\Database\Eloquent\Model;
@@ -25,6 +26,11 @@ class Product extends Model
     public function scopeIsNotDeleted($query)
     {
         return $query->where('is_deleted', '=', IsDeleted::NO->value);
+    }
+
+    public function scopeIsAvailable($query)
+    {
+        return $query->where('is_available', '=', IsAvailable::YES->value);
     }
 
     public function scopeSoldByQuantity($query)
