@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\UserController;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Supplier;
@@ -15,8 +17,6 @@ use Inertia\Inertia;
 Route::get('/', function (Request $request) {
     $categories = Category::select('id', 'name')->get();
     $products = Product::isNotDeleted()->isAvailable();
-
-
 
     if ($request->input("search")) {
         $search = $request->input("search");
@@ -35,12 +35,18 @@ Route::get('/', function (Request $request) {
         $product->image = Storage::url($product->image);
     });
 
-
     return Inertia::render('Welcome', [
         'categories' => $categories,
         'products' => $products
     ]);
-});
+})->name('home');
+
+Route::get('/register', [CustomerController::class, 'register'])->name('customers.register');
+Route::post('/register', [CustomerController::class, 'store'])->name('customers.store');
+
+Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
+Route::get('/login', [UserController::class, 'login'])->name('users.login');
+Route::post('/signin', [UserController::class, 'signin'])->name('users.signin');
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
