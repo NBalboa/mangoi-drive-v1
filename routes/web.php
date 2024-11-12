@@ -16,7 +16,7 @@ use Inertia\Inertia;
 
 Route::get('/', function (Request $request) {
     $categories = Category::select('id', 'name')->get();
-    $products = Product::isNotDeleted()->isAvailable();
+    $products = Product::with('category')->isNotDeleted()->isAvailable();
 
     if ($request->input("search")) {
         $search = $request->input("search");
@@ -40,6 +40,37 @@ Route::get('/', function (Request $request) {
         'products' => $products
     ]);
 })->name('home');
+
+Route::get('/menu', function (Request $request) {
+
+
+    $categories = Category::select('id', 'name')->get();
+    $products = Product::with('category')->isNotDeleted()->isAvailable();
+
+    if ($request->input("search")) {
+        $search = $request->input("search");
+        $products = $products->where('name', 'like', '%' . $search . '%');
+    }
+
+    if ($request->input("filter")) {
+        $filter = $request->input("filter");
+        $products = $products->where('category_id', '=', $filter['id']);
+    }
+
+
+    $products = $products->get();
+
+    $products->map(function ($product) {
+        $product->image = Storage::url($product->image);
+    });
+
+    return Inertia::render('Menu', [
+        'categories' => $categories,
+        'products' => $products
+    ]);
+})->name('menu');
+
+Route::get('/menus/{category}/{product}', [ProductController::class, 'detail'])->name('products.details');
 
 Route::get('/register', [CustomerController::class, 'register'])->name('customers.register');
 Route::post('/register', [CustomerController::class, 'store'])->name('customers.store');

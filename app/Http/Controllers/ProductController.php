@@ -18,6 +18,31 @@ use Inertia\Inertia;
 
 class ProductController extends Controller
 {
+
+    public function detail(string $category, Product $product)
+    {
+        $category = Category::where('name', $category)->first();
+
+        $products = Product::with('category')->where('id', '!=', $product->id)
+            ->byCategory($category)
+            ->get();
+
+        $product->image = Storage::url($product->image);
+
+        $products->map(function ($product) {
+            $product->image = Storage::url($product->image);
+        });
+
+
+
+
+        return Inertia::render('ProductDetails', [
+            'products' => $products,
+            'product' => $product,
+            'category' => $category
+        ]);
+    }
+
     public function index()
     {
 

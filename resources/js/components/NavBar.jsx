@@ -27,14 +27,12 @@ function NavBar() {
                     </Link>
                 </li>
                 <li className="hidden md:block">
-                    <a href="#" className="text-white hover:text-yellow-200">
+                    <Link
+                        href="/menu"
+                        className="text-white hover:text-yellow-200"
+                    >
                         Menu
-                    </a>
-                </li>
-                <li className="hidden md:block">
-                    <a href="#" className="text-white hover:text-yellow-200">
-                        Contact
-                    </a>
+                    </Link>
                 </li>
 
                 {auth.user ? (

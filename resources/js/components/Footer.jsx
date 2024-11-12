@@ -2,7 +2,7 @@ import React from "react";
 
 function Footer() {
     return (
-        <footer className="bg-black mt-5">
+        <footer className="bg-black mt-5 relative bottom-0">
             <div className="mt-5 p-5 border-b-2 p-3 border-yellow-300">
                 <ul className="text-white text-xl text-center mx:auto md:mx-72 flex justify-between ">
                     <li>

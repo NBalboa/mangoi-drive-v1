@@ -18,9 +18,16 @@ class Product extends Model
         "image"
     ];
 
+
+
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function scopeByCategory($query, $category)
+    {
+        return $query->where('category_id', $category->id);
     }
 
     public function scopeIsNotDeleted($query)

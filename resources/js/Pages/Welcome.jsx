@@ -79,7 +79,7 @@ function Welcome({ categories, products }) {
                             type="text"
                             value={data.search}
                             onChange={(e) => setData("search", e.target.value)}
-                            className="w-full ps-4 py-3 pe-[10%] border-2 border-yellow-300 rounded-full focus:outline-yellow-300"
+                            className="w-full ps-4 py-2 pe-[10%] border-2 border-yellow-300 rounded-full focus:outline-yellow-300"
                         />
                         <button
                             type="submit"
@@ -113,9 +113,13 @@ function Welcome({ categories, products }) {
                         ))}
                     </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
                     {products.map((product) => (
-                        <FoodCard key={product.id} product={product} />
+                        <FoodCard
+                            key={product.id}
+                            product={product}
+                            category={product.category}
+                        />
                     ))}
                     {products.length === 0 ? (
                         <p className="text-center text-2xl mx-auto">
