@@ -13,11 +13,11 @@ function NavBar() {
     }
 
     return (
-        <nav className="relative flex p-5 bg-black justify-between rounded-b-rtl shadow-lg">
+        <nav className="relative flex p-5 bg-black justify-between rounded-b-rtl shadow-lg z-50">
             <h1 className="text-white hover:text-yellow-200 text-2xl md:text-3xl font-bold">
                 <a href="#">Mango Drive</a>
             </h1>
-            <ul className="flex font-semibold text-md gap-2  items-center">
+            <ul className="flex font-semibold text-md gap-5  items-center">
                 <li className="hidden md:block">
                     <Link
                         href="/"
@@ -33,6 +33,21 @@ function NavBar() {
                     >
                         Menu
                     </Link>
+                </li>
+                <li className="hidden md:block relative">
+                    <Link
+                        href="/cart"
+                        className="text-white hover:text-yellow-200 z-10"
+                    >
+                        Cart
+                    </Link>
+                    {auth.cart_total > 0 ? (
+                        <div className="absolute -top-[10px] -right-4 h-5 w-5 flex items-center justify-center bg-red-700 rounded-full">
+                            <p className="text-white text-xs font-bold">
+                                {auth.cart_total}
+                            </p>
+                        </div>
+                    ) : null}
                 </li>
 
                 {auth.user ? (

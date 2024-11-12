@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
@@ -99,3 +100,9 @@ Route::delete('/suppliers/{supplier}', [SupplierController::class, 'delete'])->n
 
 Route::get('/stocks/create', [StockController::class, 'create'])->name("stocks.create");
 Route::post('/stocks/create', [StockController::class, 'store'])->name('stocks.store');
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/{user}/{product}', [CartController::class, 'store'])->name('cart.store');
+Route::put('/cart/add/{cart}', [CartController::class, 'add'])->name('cart.add');
+Route::put('/cart/subtract/{cart}', [CartController::class, 'subtract'])->name('cart.subtract');
+Route::delete('/cart/{cart}', [CartController::class, 'delete'])->name('cart.delete');

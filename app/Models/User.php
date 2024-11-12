@@ -29,6 +29,12 @@ class User extends Authenticatable
         'remember_token'
     ];
 
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class, 'user_id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

@@ -5,7 +5,7 @@ import FormLayout from "../components/FormLayout";
 import Form from "../components/Form";
 import FormLabel from "../components/FormLabel";
 import FormInput from "../components/FormInput";
-import { useForm } from "@inertiajs/react";
+import { Link, useForm } from "@inertiajs/react";
 import Error from "../components/Error";
 import FormButton from "../components/FormButton";
 import Spinner from "../components/Spinner";
@@ -96,7 +96,7 @@ function Login() {
                         <p className="text-sm mt-[30px]">
                             Don't have an account?{" "}
                             <span className="text-yellow-500 hover:underline">
-                                <a href="#">Register here</a>
+                                <Link href="/register">Register here</Link>
                             </span>
                         </p>
                     </div>

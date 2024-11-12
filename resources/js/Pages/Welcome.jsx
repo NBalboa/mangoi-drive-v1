@@ -4,6 +4,7 @@ import Chicken from "../../images/chicken.png";
 import FoodCard from "../components/FoodCard";
 import Footer from "../components/Footer";
 import { useForm } from "@inertiajs/react";
+import { Toaster } from "react-hot-toast";
 
 function Welcome({ categories, products }) {
     const { data, setData, get, processing } = useForm({

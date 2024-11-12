@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Enums\UserRole;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
@@ -39,7 +40,8 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'auth' => [
-                'user' => Auth::user(),
+                'user' => Auth::user() ?? null,
+                'cart_total' => UserRole::CUSTOMER->value === Auth::user()->role ? User::where('id', Auth::user()->id)->first()->carts()->get()->count() : null,
                 'roles' => [
                     'ADMIN' => UserRole::ADMIN->value,
                     'CUSTOMER' => UserRole::CUSTOMER->value

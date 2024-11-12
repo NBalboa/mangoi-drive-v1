@@ -1,14 +1,45 @@
 import React, { useState } from "react";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
-import { useForm } from "@inertiajs/react";
+import { router, useForm, usePage } from "@inertiajs/react";
 import FoodCard from "../components/FoodCard";
+import toast, { Toaster } from "react-hot-toast";
 
 function ProductDetails({ products, product, category }) {
     const { data, setData, get, processing } = useForm({
         search: "",
     });
     const [quantity, setQuantity] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const { auth } = usePage().props;
+
+    function handleSubmit() {
+        setLoading(true);
+        if (!loading) {
+            router.post(
+                `/cart/${auth.user.id}/${product.id}`,
+                {
+                    quantity: quantity,
+                },
+                {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        toast.success("Item added to the cart successfully", {
+                            position: "top-right",
+                        });
+                    },
+                    onError: (err) => {
+                        toast.error(err.cart, {
+                            position: "top-right",
+                        });
+                    },
+                    onFinish: () => {
+                        setLoading(false);
+                    },
+                }
+            );
+        }
+    }
 
     function handleAddQuantity(quantity) {
         if (product.quantity) {
@@ -32,6 +63,7 @@ function ProductDetails({ products, product, category }) {
 
     return (
         <div>
+            <Toaster />
             <NavBar />
             <main>
                 <div className="m-5 space-y-3">
@@ -107,7 +139,10 @@ function ProductDetails({ products, product, category }) {
                                     <button className="px-4 py-2 rounded-lg text-white bg-yellow-600 text-md text-semibold hover:opacity-80 me-5">
                                         Buy Now
                                     </button>
-                                    <button className="px-4 py-2 rounded-lg text-white bg-yellow-600 text-md text-semibold hover:opacity-80">
+                                    <button
+                                        onClick={() => handleSubmit()}
+                                        className="px-4 py-2 rounded-lg text-white bg-yellow-600 text-md text-semibold hover:opacity-80"
+                                    >
                                         Add to Cart
                                     </button>
                                 </div>
