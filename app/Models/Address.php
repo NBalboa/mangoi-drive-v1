@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\IsDeleted;
 use Illuminate\Database\Eloquent\Model;
 
 class Address extends Model
@@ -16,4 +17,10 @@ class Address extends Model
         "city",
         "province"
     ];
+
+
+    public function scopeNotDeleted($query)
+    {
+        return $query->where('is_deleted', '=', IsDeleted::NO->value);
+    }
 }

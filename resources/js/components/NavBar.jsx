@@ -34,29 +34,39 @@ function NavBar() {
                         Menu
                     </Link>
                 </li>
-                <li className="hidden md:block relative">
-                    <Link
-                        href="/cart"
-                        className="text-white hover:text-yellow-200 z-10"
-                    >
-                        Cart
-                    </Link>
-                    {auth.cart_total > 0 ? (
-                        <div className="absolute -top-[10px] -right-4 h-5 w-5 flex items-center justify-center bg-red-700 rounded-full">
-                            <p className="text-white text-xs font-bold">
-                                {auth.cart_total}
-                            </p>
-                        </div>
-                    ) : null}
-                </li>
 
                 {auth.user ? (
-                    <button
-                        onClick={() => handleLogout()}
-                        className="px-4 py-2 bg-yellow-600 text-white rounded hover:opacity-90"
-                    >
-                        Logout
-                    </button>
+                    <>
+                        <li className="hidden md:block relative">
+                            <Link
+                                href="/cart"
+                                className="text-white hover:text-yellow-200 z-10"
+                            >
+                                Cart
+                            </Link>
+                            {auth.cart_total > 0 ? (
+                                <div className="absolute -top-[10px] -right-4 h-5 w-5 flex items-center justify-center bg-red-700 rounded-full">
+                                    <p className="text-white text-xs font-bold">
+                                        {auth.cart_total}
+                                    </p>
+                                </div>
+                            ) : null}
+                        </li>
+                        <li className="hidden md:block">
+                            <Link
+                                href="/account"
+                                className="text-white hover:text-yellow-200"
+                            >
+                                Account
+                            </Link>
+                        </li>
+                        <button
+                            onClick={() => handleLogout()}
+                            className="px-4 py-2 bg-yellow-600 text-white rounded hover:opacity-90"
+                        >
+                            Logout
+                        </button>
+                    </>
                 ) : (
                     <>
                         <li>

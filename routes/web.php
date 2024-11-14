@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
@@ -75,10 +76,20 @@ Route::get('/menus/{category}/{product}', [ProductController::class, 'detail'])-
 
 Route::get('/register', [CustomerController::class, 'register'])->name('customers.register');
 Route::post('/register', [CustomerController::class, 'store'])->name('customers.store');
+Route::get('/name', [CustomerController::class, 'name'])->name('customers.name');
+Route::put('/name/{user}', [CustomerController::class, 'updateName'])->name('customers.update.name');
 
 Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
 Route::get('/login', [UserController::class, 'login'])->name('users.login');
 Route::post('/signin', [UserController::class, 'signin'])->name('users.signin');
+Route::get('/account', [UserController::class, 'account'])->name('users.account');
+Route::get('/address', [UserController::class, 'address'])->name('users.address');
+
+Route::post('/address/{user}', [AddressController::class, 'create'])->name('addresses.create');
+Route::get('/address/{user}/{address}', [AddressController::class, 'edit'])->name('addresses.edit');
+Route::put('/address/{address}', [AddressController::class, 'update'])->name('addresses.update');
+Route::delete('/address/{address}', [AddressController::class, 'delete'])->name('addresses.delete');
+
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');

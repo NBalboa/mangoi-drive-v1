@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\UserRole;
 use App\Http\Requests\StoreCustomerRequest;
+use App\Http\Requests\UpdateCustomerNameRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,5 +38,21 @@ class CustomerController extends Controller
         Session::regenerate();
 
         return back();
+    }
+
+    public function name()
+    {
+        return Inertia::render('CustomerEditName');
+    }
+
+    public function updateName(UpdateCustomerNameRequest $request, User $user)
+    {
+        $validated = $request->all();
+
+        $user->update([
+            'first_name' => $validated['first_name'],
+            'middle_name' => $validated['middle_name'],
+            'last_name' => $validated['last_name']
+        ]);
     }
 }

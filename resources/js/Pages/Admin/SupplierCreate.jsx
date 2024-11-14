@@ -5,11 +5,6 @@ import Content from "../../components/Content";
 import InputGroup from "../../components/InputGroup";
 import Swal from "sweetalert2";
 import Error from "../../components/Error";
-import {
-    getAllProvinces,
-    getBarangaysByMunicipality,
-    getMunicipalitiesByProvince,
-} from "@aivangogh/ph-address";
 import useAdrress from "../../Hooks/UseAdrress";
 
 function SupplierCreate() {

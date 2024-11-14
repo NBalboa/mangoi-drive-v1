@@ -41,7 +41,7 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => Auth::user() ?? null,
-                'cart_total' => UserRole::CUSTOMER->value === Auth::user()->role ? User::where('id', Auth::user()->id)->first()->carts()->get()->count() : null,
+                'cart_total' => UserRole::CUSTOMER->value === Auth::user()?->role ? User::where('id', Auth::user()->id)->first()->carts()->get()->count() : null,
                 'roles' => [
                     'ADMIN' => UserRole::ADMIN->value,
                     'CUSTOMER' => UserRole::CUSTOMER->value

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SigninRequest;
+use App\Models\Address;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +14,22 @@ use Inertia\Inertia;
 class UserController extends Controller
 {
 
+
+    public function account()
+    {
+        $user = Auth::user();
+
+        $addresses = Address::where('user_id', $user->id)->notDeleted()->get();
+        return Inertia::render('Account', [
+            'addresses' => $addresses
+        ]);
+    }
+
+    public function address()
+    {
+
+        return Inertia::render('Address');
+    }
 
     public function login()
     {

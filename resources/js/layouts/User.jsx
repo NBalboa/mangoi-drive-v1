@@ -11,7 +11,7 @@ function User({ children }) {
         <div>
             <Toaster />
             <NavBar />
-            <main>{children}</main>
+            <main className="m-5">{children}</main>
             <Footer />
         </div>
     );
