@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Footer from "../components/Footer";
 import FormButton from "../components/FormButton";
 import { Link, useForm, usePage } from "@inertiajs/react";
@@ -29,6 +29,10 @@ function CustomerEditName() {
             });
         }
     }
+
+    useEffect(() => {
+        return () => toast.remove();
+    }, []);
 
     return (
         <div>

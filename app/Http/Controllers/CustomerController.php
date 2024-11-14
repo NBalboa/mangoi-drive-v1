@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Enums\UserRole;
 use App\Http\Requests\StoreCustomerRequest;
+use App\Http\Requests\UpdateCustomerEmailRequest;
 use App\Http\Requests\UpdateCustomerNameRequest;
+use App\Http\Requests\UpdateCustomerPhoneRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -45,6 +47,12 @@ class CustomerController extends Controller
         return Inertia::render('CustomerEditName');
     }
 
+    public function contact()
+    {
+
+        return Inertia::render('ContactEdit');
+    }
+
     public function updateName(UpdateCustomerNameRequest $request, User $user)
     {
         $validated = $request->all();
@@ -54,5 +62,27 @@ class CustomerController extends Controller
             'middle_name' => $validated['middle_name'],
             'last_name' => $validated['last_name']
         ]);
+    }
+
+    public function updateEmail(UpdateCustomerEmailRequest $request, User $user)
+    {
+        $validated = $request->all();
+
+        $user->update([
+            'email' => $validated['email']
+        ]);
+
+        return back();
+    }
+
+    public function updatePhone(UpdateCustomerPhoneRequest $request, User $user)
+    {
+        $validated = $request->all();
+
+        $user->update([
+            'phone' => $validated['phone']
+        ]);
+
+        return back();
     }
 }

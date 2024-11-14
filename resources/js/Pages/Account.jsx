@@ -39,7 +39,7 @@ function Account({ addresses }) {
                             {user.last_name}
                         </p>
                     </AccountCard>
-                    <AccountCard title="Contact">
+                    <AccountCard title="Contact" to="/contact">
                         <p className="font-medium">{user.email}</p>
                         <p className="font-medium">{user.phone}</p>
                     </AccountCard>

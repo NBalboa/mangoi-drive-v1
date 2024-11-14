@@ -78,6 +78,10 @@ Route::get('/register', [CustomerController::class, 'register'])->name('customer
 Route::post('/register', [CustomerController::class, 'store'])->name('customers.store');
 Route::get('/name', [CustomerController::class, 'name'])->name('customers.name');
 Route::put('/name/{user}', [CustomerController::class, 'updateName'])->name('customers.update.name');
+Route::get('/contact', [CustomerController::class, 'contact'])->name('customers.contact');
+Route::put('/email/{user}', [CustomerController::class, 'updateEmail'])->name('customers.update.email');
+Route::put('/phone/{user}', [CustomerController::class, 'updatePhone'])->name('customers.update.phone');
+
 
 Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
 Route::get('/login', [UserController::class, 'login'])->name('users.login');
