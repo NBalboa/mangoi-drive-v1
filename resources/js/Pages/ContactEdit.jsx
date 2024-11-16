@@ -108,7 +108,9 @@ function ContactEdit() {
                             />
                             {errors.phone ? (
                                 <Error>{errors.phone}</Error>
-                            ) : null}
+                            ) : (
+                                null``
+                            )}
                         </div>
                         {loadingPhone ? (
                             <Spinner />

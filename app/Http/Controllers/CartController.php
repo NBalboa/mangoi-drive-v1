@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PaymentType;
 use App\Http\Requests\StoreCartRequest;
+use App\Models\Address;
 use App\Models\Cart;
 use App\Models\Product;
 use App\Models\User;
@@ -16,10 +18,12 @@ class CartController extends Controller
     public function index()
     {
         $carts = User::where('id', Auth::user()->id)->first()->carts()->with('product')->get();
+        $addresses = Address::where('user_id', Auth::user()->id)->get();
+
         $total = 0;
-        $carts->map(function ($cart) use ($total) {
+        $carts->map(function ($cart) {
             $cart->product->image = Storage::url($cart->product->image);
-            $cart->total = number_format($cart->product->price * $cart->quantity, 2);
+            $cart->total = $cart->product->price * $cart->quantity;
         });
 
         foreach ($carts as $cart) {
@@ -28,7 +32,12 @@ class CartController extends Controller
 
         return Inertia::render('Cart', [
             'carts' => $carts,
-            'total' => number_format($total, 2)
+            'total' => $total,
+            'addresses' => $addresses,
+            'payment_type' => [
+                'CASH' => PaymentType::CASH->value,
+                'PAYPAL' => PaymentType::PAYPAL->value
+            ]
         ]);
     }
 

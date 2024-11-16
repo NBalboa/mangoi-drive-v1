@@ -39,7 +39,7 @@ class CustomerController extends Controller
         Auth::login($user);
         Session::regenerate();
 
-        return back();
+        return redirect()->route('home');
     }
 
     public function name()

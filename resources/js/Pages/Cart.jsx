@@ -1,9 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import User from "../layouts/User";
 import CartItem from "../components/CartItem";
 import PAYPAL from "../../images/paypal.webp";
+import { useForm, usePage } from "@inertiajs/react";
+import Error from "../components/Error";
 
-function Cart({ carts, total }) {
+function Cart({ carts, total, addresses, payment_type }) {
+    const { auth } = usePage().props;
+
+    const { data, setData, post, errors, processing } = useForm({
+        address: null,
+        payment_type: payment_type.CASH,
+    });
+
+    const [address, setAddress] = useState(null);
+    function handleAddress(e) {
+        const selected_address = addresses.find((address) => {
+            if (Number(e.target.value) == address.id) {
+                return address;
+            }
+        });
+        setAddress(selected_address);
+        if (selected_address) {
+            setData("address", selected_address.id);
+        }
+    }
+
+    console.log(errors);
+
+    function handleCashOrder() {
+        setData("payment_type", payment_type.CASH);
+        if (!processing) {
+            post(`/orders/${auth.user.id}`);
+        }
+    }
+
     return (
         <div>
             <User>
@@ -31,7 +62,7 @@ function Cart({ carts, total }) {
                                         <h2 className="font-bold text-md">
                                             Price
                                         </h2>
-                                        <h2 className="font-bold text-md">
+                                        <h2 className="font-bold text-md text-center">
                                             Quantity
                                         </h2>
                                         <h2 className="font-bold text-md">
@@ -44,10 +75,14 @@ function Cart({ carts, total }) {
                                             className="grid grid-cols-4 gap-2"
                                         >
                                             <p>{cart.product.name}</p>
-                                            <p>P{cart.product.price}</p>
-                                            <p>{cart.quantity}</p>
+                                            <p>{cart.product.price}</p>
+                                            <p className="text-center">
+                                                {cart.quantity}
+                                            </p>
                                             <p className="font-semibold">
-                                                P{cart.total}
+                                                {parseFloat(cart.total).toFixed(
+                                                    2
+                                                )}
                                             </p>
                                         </div>
                                     ))}
@@ -56,14 +91,56 @@ function Cart({ carts, total }) {
                                             Total
                                         </h2>
                                         <p className="font-bold text-lg me-5">
-                                            {total}
+                                            {parseFloat(total).toFixed(2)}
                                         </p>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <h2 className="font-bold text-xl">
+                                            Address
+                                        </h2>
+                                        {address ? (
+                                            <div>
+                                                <p className="text-md font-normal uppercase">
+                                                    {address.street},{" "}
+                                                    {address.barangay},{" "}
+                                                    {address.city},{" "}
+                                                    {address.province}
+                                                </p>
+                                            </div>
+                                        ) : (
+                                            <p className="text-md uppercase">
+                                                select an address to proceed
+                                            </p>
+                                        )}
+                                        <select
+                                            value={address?.id}
+                                            onChange={(e) => handleAddress(e)}
+                                            className="w-full px-4 py-2 border-2 text-md rounded-lg"
+                                        >
+                                            <option value="">
+                                                Select Address
+                                            </option>
+                                            {addresses.map((address) => (
+                                                <option
+                                                    key={address.id}
+                                                    value={address.id}
+                                                >
+                                                    {address.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        {errors.address ? (
+                                            <Error>{errors.address}</Error>
+                                        ) : null}
                                     </div>
                                     <div className="space-y-2">
                                         <h2 className="font-bold text-xl">
                                             Payment
                                         </h2>
-                                        <button className="bg-black text-white text-center w-full py-2 px-4 font-semibold rounded hover:opacity-80">
+                                        <button
+                                            onClick={() => handleCashOrder()}
+                                            className="bg-black text-white text-center w-full py-2 px-4 font-semibold rounded hover:opacity-80"
+                                        >
                                             Cash
                                         </button>
                                         <button className="w-full px-4 py-2 bg-gray-300 border-2 rounded-lg hover:opacity-80">
