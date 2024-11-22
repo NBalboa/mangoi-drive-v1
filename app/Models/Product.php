@@ -5,7 +5,9 @@ namespace App\Models;
 use App\Enums\IsAvailable;
 use App\Enums\IsDeleted;
 use App\Enums\SoldByQuantity;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -18,6 +20,13 @@ class Product extends Model
         "image"
     ];
 
+
+    public function image(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => Storage::url($value)
+        );
+    }
 
 
     public function category()

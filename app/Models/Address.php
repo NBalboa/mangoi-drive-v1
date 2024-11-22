@@ -18,6 +18,16 @@ class Address extends Model
         "province"
     ];
 
+    public function scopeSearch($query, $search)
+    {
+        return $query->whereAny([
+            'street',
+            'barangay',
+            'city',
+            'province'
+        ], 'like', '%' . $search . '%');
+    }
+
 
     public function scopeNotDeleted($query)
     {

@@ -25,16 +25,12 @@ class OrderCreated implements ShouldBroadcast
     public Order $order;
     public Address $address;
     public User $user;
-    public Collection $items;
 
     public function __construct(Order $order)
     {
         $this->user = User::where('id', $order->user_id)->first();
         $this->address = Address::where('id', $order->address_id)->first();
         $this->order = $order;
-        $this->address = $this->address;
-        $this->user = $this->user;
-        $this->items = OrderItem::where('order_id', $order->id)->get();
     }
 
     /**

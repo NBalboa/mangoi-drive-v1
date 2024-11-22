@@ -29,11 +29,6 @@ class ProductController extends Controller
 
         $product->image = Storage::url($product->image);
 
-        $products->map(function ($product) {
-            $product->image = Storage::url($product->image);
-        });
-
-
 
 
         return Inertia::render('ProductDetails', [
@@ -47,9 +42,6 @@ class ProductController extends Controller
     {
 
         $products = Product::with('category')->isNotDeleted()->paginate(10);
-        $products->map(function ($product) {
-            $product->image = Storage::url($product->image);
-        });
 
         $IS_AVAILABLE = [
             "YES" => IsAvailable::YES->value,
@@ -114,8 +106,6 @@ class ProductController extends Controller
     {
         $categories = Category::select('id', 'name')->get();
         $suppliers = Supplier::select('id', 'name')->get();
-        $product->image =
-            Storage::url($product->image);
 
         $SOLD_BY_QUANTITY = SoldByQuantity::YES->value;
         return Inertia::render("Admin/ProductEdit", [

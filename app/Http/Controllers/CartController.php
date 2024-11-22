@@ -22,7 +22,6 @@ class CartController extends Controller
 
         $total = 0;
         $carts->map(function ($cart) {
-            $cart->product->image = Storage::url($cart->product->image);
             $cart->total = $cart->product->price * $cart->quantity;
         });
 

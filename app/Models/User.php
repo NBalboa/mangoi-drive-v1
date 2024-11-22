@@ -30,6 +30,16 @@ class User extends Authenticatable
     ];
 
 
+    public function scopeSearch($query, $search)
+    {
+        return $query->whereAny([
+            'first_name',
+            'last_name',
+            'phone',
+            'middle_name'
+        ], 'like', '%' . $search . '%');
+    }
+
     public function carts()
     {
         return $this->hasMany(Cart::class, 'user_id');
