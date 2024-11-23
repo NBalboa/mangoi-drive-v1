@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\IsAvailable;
 use App\Enums\IsDeleted;
 use App\Enums\SoldByQuantity;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -33,23 +34,26 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
-
-    public function scopeByCategory($query, $category)
+    public function scopeSearch(Builder $query, string $search)
     {
-        return $query->where('category_id', $category->id);
+        return $query->where('name', 'like', '%' . $search . '%');
+    }
+    public function scopeByCategory(Builder $query, int $category)
+    {
+        return $query->where('category_id', '=', $category);
     }
 
-    public function scopeIsNotDeleted($query)
+    public function scopeIsNotDeleted(Builder $query)
     {
         return $query->where('is_deleted', '=', IsDeleted::NO->value);
     }
 
-    public function scopeIsAvailable($query)
+    public function scopeIsAvailable(Builder $query)
     {
         return $query->where('is_available', '=', IsAvailable::YES->value);
     }
 
-    public function scopeSoldByQuantity($query)
+    public function scopeSoldByQuantity(Builder $query)
     {
 
         return $query->where('sold_by_quantity', '=', SoldByQuantity::YES->value);
