@@ -30,7 +30,6 @@ class ProductController extends Controller
         $product->image = Storage::url($product->image);
 
 
-
         return Inertia::render('ProductDetails', [
             'products' => $products,
             'product' => $product,

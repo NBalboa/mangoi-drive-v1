@@ -74,6 +74,7 @@ Route::get('/menus/{category}/{product}', [ProductController::class, 'detail'])-
 
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
+Route::post('/orders/create', [OrderController::class, 'store'])->name('orders.store');
 
 Route::get('/online/orders', [OnlineOrderController::class, 'index'])->name('online.orders.index');
 Route::get('/online/orders/{order}', [OnlineOrderController::class, 'order'])->name('online.orders.order');
@@ -123,7 +124,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/cart/subtract/{cart}', [CartController::class, 'subtract'])->name('cart.subtract');
     Route::delete('/cart/{cart}', [CartController::class, 'delete'])->name('cart.delete');
 
-    Route::post('/orders/{user}', [OrderController::class, 'store'])->name('orders.store');
+    Route::post('/online/orders/{user}', [OrderController::class, 'store'])->name('orders.store');
 
     Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
 

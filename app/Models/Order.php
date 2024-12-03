@@ -13,7 +13,9 @@ class Order extends Model
         'address_id',
         'payment_type',
         'status',
-        'total'
+        'total',
+        'amount_render',
+        'order_type'
     ];
 
     public function status(): Attribute

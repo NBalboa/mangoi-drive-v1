@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import User from "../layouts/User";
 import { Link, router, usePage } from "@inertiajs/react";
 import AccountCard from "../components/AccountCard";

@@ -18,7 +18,9 @@ return new class extends Migration
             $table->foreignId('address_id')->nullable();
             $table->tinyInteger('payment_type');
             $table->tinyInteger('status')->default(Status::PENDING->value);
+            $table->tinyInteger('order_type');
             $table->decimal("total", 10, 2);
+            $table->decimal("amount_render", 10,2);
             $table->timestamps();
         });
     }
