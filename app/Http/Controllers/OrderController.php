@@ -6,19 +6,49 @@ use App\Enums\IsAvailable;
 use App\Enums\OrderType;
 use App\Enums\PaymentType;
 use App\Http\Requests\StoreOrderRequest;
+use App\Http\Requests\UpdateOrderStatusRequest;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render("Admin/Orders");
+
+        $orders = Order::with('items')->where('payment_type', '=', PaymentType::CASH->value);
+
+        if($request->input('search')){
+            $search = $request->input('search');
+            $orders = $orders->search($search);
+        }
+
+        if($request->input('status')){
+
+            $status = $request->input('status');
+            $orders = $orders->status((int) $status);
+        }
+
+        if($request->input('order_type')){
+            $order_type = $request->input('order_type');
+            $orders = $orders->orderType($order_type);
+        }
+
+        $orders = $orders->paginate(10)->withQueryString();
+        // dd($orders);
+        // dd($orders->toSql(), $orders->getBindings(), $orders->get()); //this works but if i comment this line of code will return an arument errod
+        return Inertia::render("Admin/Orders", [
+            'orders'  => $orders,
+            'filters' => [
+                'search' => $request->input('search'),
+                'status' => $request->input('status'),
+                'order_type' => $request->input('order_type')
+            ]
+        ]);
     }
 
     public function create(Request $request)
@@ -37,6 +67,7 @@ class OrderController extends Controller
             $products = $products->byCategory($category);
         }
         $products = $products->get();
+
 
         return Inertia::render("Admin/OrdersCreate", [
             'categories' => $categories,
@@ -93,7 +124,16 @@ class OrderController extends Controller
             }
         }
 
-        return redirect()->route('orders.index');
+        return redirect()->route('receipt.order', $order->id);
     }
+
+    public function updateStatus(UpdateOrderStatusRequest $request, int $id){
+        $validated = $request->validated();
+        $order = Order::where('id', $id)->first();
+        $order->status = $validated['status'];
+        $order->save();
+
+        return back();
+     }
 
 }

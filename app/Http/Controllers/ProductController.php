@@ -37,18 +37,43 @@ class ProductController extends Controller
         ]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
 
-        $products = Product::with('category')->isNotDeleted()->paginate(10);
-
+        $products = Product::with('category');
+        $categories = Category::select('id', 'name')->isNotDeleted()->get();
         $IS_AVAILABLE = [
             "YES" => IsAvailable::YES->value,
             "NO" => IsAvailable::NO->value
         ];
 
+
+        if($request->input('search')){
+            $search = $request->input('search');
+            $products = $products->search($search)
+            ->orWhereHas('category', function($query) use($search) {
+                $query->byName($search);
+            });
+        }
+
+        if($request->input('category')){
+            $category = $request->input('category');
+            $products = $products->whereHas('category', function($query) use($category){
+                $query->byId((int) $category);
+            });
+        }
+
+        if($request->input('available')){
+            $available = $request->input('available');
+
+            $products = $products->byAvailable($available);
+        }
+
+        $products = $products->isNotDeleted()->paginate(10)->withQueryString();
+
         return Inertia::render('Admin/Product', [
             'products' => $products,
+            'categories' => $categories,
             'IS_AVAILABLE' => $IS_AVAILABLE
         ]);
     }

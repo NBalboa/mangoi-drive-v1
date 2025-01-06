@@ -10,9 +10,12 @@ import TableData from "../../components/TableData";
 import { Link, router, usePage } from "@inertiajs/react";
 import toast, { Toaster } from "react-hot-toast";
 import Links from "../../components/Links";
+import { getStringPaymentType } from "../../helpers/getStringPaymentType";
+import { getStringOrderStatus } from "../../helpers/getStringOrderStatus";
+import { toStringTitle } from "../../helpers/toStringTitle";
+import OrderSearch from "../../components/OrderSearch";
 
 function Orders({ initialOrders, OrderStatus, filters }) {
-    console.log(filters);
     function handleCheckOrder(id) {
         setOrders((prev) =>
             prev.map((order) => {
@@ -35,7 +38,6 @@ function Orders({ initialOrders, OrderStatus, filters }) {
             }))
         );
     }
-    console.log(initialOrders);
     const [orders, setOrders] = useState(
         initialOrders.data.map((order) => {
             return { ...order, checked: false };
@@ -47,7 +49,7 @@ function Orders({ initialOrders, OrderStatus, filters }) {
         const ids = ordersChecked.map((order) => order.id);
 
         router.post(
-            "/orders/changestatus",
+            "/online/orders/changestatus",
             {
                 status: status,
                 orders: ids,
@@ -92,13 +94,13 @@ function Orders({ initialOrders, OrderStatus, filters }) {
         };
     }, []);
 
-    const [search, setSearch] = useState(filters.search);
-    const [filterStatus, setFilterStatus] = useState(filters.status);
+    const [search, setSearch] = useState(filters.search ?? "");
+    const [filterStatus, setFilterStatus] = useState(filters.status ?? "");
 
     function handleSearch(e) {
         e.preventDefault();
         router.get(
-            "/orders",
+            "/online/orders",
             {
                 search: search,
                 filterStatus: filterStatus,
@@ -213,8 +215,8 @@ function Orders({ initialOrders, OrderStatus, filters }) {
                                 </TableData>
                                 <TableData>{order.id}</TableData>
                                 <TableData>
-                                    {order.user.first_name}{" "}
-                                    {order.user.last_name}
+                                    {toStringTitle(order.user.first_name)}{" "}
+                                    {toStringTitle(order.user.last_name)}
                                 </TableData>
                                 <TableData>{order.user.phone}</TableData>
                                 <TableData uppercase={true}>
@@ -224,12 +226,16 @@ function Orders({ initialOrders, OrderStatus, filters }) {
                                     {order.address.province}
                                 </TableData>
 
-                                <TableData>{order.status}</TableData>
-                                <TableData>{order.payment_type}</TableData>
+                                <TableData>
+                                    {getStringOrderStatus(order.status)}
+                                </TableData>
+                                <TableData>
+                                    {getStringPaymentType(order.payment_type)}
+                                </TableData>
                                 <TableData>{order.total}</TableData>
                                 <TableData>
                                     <Link
-                                        href={`/orders/${order.id}`}
+                                        href={`/items/${order.id}`}
                                         className="text-blue-600 hover:underline uppercase"
                                     >
                                         Items
@@ -239,9 +245,11 @@ function Orders({ initialOrders, OrderStatus, filters }) {
                         ))}
                     </TableBody>
                 </Table>
-                {initialOrders.total > initialOrders.per_page ? (
-                    <Links links={initialOrders.links} />
-                ) : null}
+                <Links
+                    links={initialOrders.links}
+                    per_page={initialOrders.per_page}
+                    total={initialOrders.total}
+                />
             </Content>
         </Admin>
     );

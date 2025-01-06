@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('city');
             $table->string('province');
             $table->tinyInteger('is_deleted')->default(IsDeleted::NO->value);
+            $table->tinyInteger('is_active')->default(0);
             $table->timestamps();
         });
     }

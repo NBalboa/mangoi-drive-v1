@@ -29,14 +29,18 @@ class Product extends Model
         );
     }
 
-
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
     public function scopeSearch(Builder $query, string $search)
     {
-        return $query->where('name', 'like', '%' . $search . '%');
+        return $query->whereAny([
+            'name',
+            'id',
+            'price',
+            'quantity'
+        ],'like', '%' . $search . '%');
     }
     public function scopeByCategory(Builder $query, int $category)
     {
@@ -46,6 +50,10 @@ class Product extends Model
     public function scopeIsNotDeleted(Builder $query)
     {
         return $query->where('is_deleted', '=', IsDeleted::NO->value);
+    }
+
+    public function scopeByAvailable($query, $available){
+        return $query->where('is_available', '=', $available - 1);
     }
 
     public function scopeIsAvailable(Builder $query)

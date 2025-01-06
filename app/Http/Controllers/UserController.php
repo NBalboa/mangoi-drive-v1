@@ -47,7 +47,7 @@ class UserController extends Controller
             Session::regenerate();
             return to_route("home");
         } else {
-            return to_route("users.login")->withErrors(['error' => "Invalid Email/Password"]);
+            return to_route("login")->withErrors(['error' => "Invalid Email/Password"]);
         }
     }
     public function logout()

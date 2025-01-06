@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\OrderType;
+use App\Enums\PaymentType;
 use App\Enums\Status;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -18,19 +20,28 @@ class Order extends Model
         'order_type'
     ];
 
-    public function status(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => Status::getStringValue($value)
-        );
-    }
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    public function scopeStatus($query, $status)
+    {
 
+        return $query->where('status', '=', $status - 1);
+    }
+
+    public function scopeOrderType($query, $status){
+        return $query->where('order_type', '=', $status - 1);
+    }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->whereAny([
+            'id',
+        ], 'like', '%' . $search . '%');
+    }
 
     public function items()
     {
@@ -40,18 +51,5 @@ class Order extends Model
     public function address()
     {
         return $this->belongsTo(Address::class, 'address_id');
-    }
-
-
-    public function scopeStatus($query, $status)
-    {
-        return $query->where('status', '=', $status - 1);
-    }
-
-    public function scopeSearch($query, $search)
-    {
-        return $query->whereAny([
-            'id',
-        ], 'like', '%' . $search . '%');
     }
 }

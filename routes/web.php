@@ -4,9 +4,12 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\OnlineOrderController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
@@ -71,10 +74,14 @@ Route::get('/menu', function (Request $request) {
 Route::get('/menus/{category}/{product}', [ProductController::class, 'detail'])->name('products.details');
 
 
-
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
 Route::post('/orders/create', [OrderController::class, 'store'])->name('orders.store');
+Route::put('/orders/status/{id}', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+
+Route::get('/orders/receipt/{order}', [ReceiptController::class, 'order'])->name('receipt.order');
+
+Route::get('/items/{order}', [ItemController::class, 'index'])->name('items.index');
 
 Route::get('/online/orders', [OnlineOrderController::class, 'index'])->name('online.orders.index');
 Route::get('/online/orders/{order}', [OnlineOrderController::class, 'order'])->name('online.orders.order');
@@ -124,7 +131,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/cart/subtract/{cart}', [CartController::class, 'subtract'])->name('cart.subtract');
     Route::delete('/cart/{cart}', [CartController::class, 'delete'])->name('cart.delete');
 
-    Route::post('/online/orders/{user}', [OrderController::class, 'store'])->name('orders.store');
+    Route::post('/online/orders/{user}', [OnlineOrderController::class, 'store'])->name('online.orders.store');
 
     Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
 
@@ -135,4 +142,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/address/{user}/{address}', [AddressController::class, 'edit'])->name('addresses.edit');
     Route::put('/address/{address}', [AddressController::class, 'update'])->name('addresses.update');
     Route::delete('/address/{address}', [AddressController::class, 'delete'])->name('addresses.delete');
+    Route::post('/address/active/{user}/{address}', [AddressController::class, 'active'])->name('addresses.active');
+
+    // Route::post('/create_order', [PaypalController::class, 'create_order'])->name('paypal.create_order');
+    // Route::post('/complete', [PaypalController::class, 'complete'])->name('paypal.complete');
 });

@@ -1,39 +1,84 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import User from "../layouts/User";
 import CartItem from "../components/CartItem";
 import PAYPAL from "../../images/paypal.webp";
-import { useForm, usePage } from "@inertiajs/react";
+import { router, useForm, usePage } from "@inertiajs/react";
 import Error from "../components/Error";
+import PaypalPayment from "../components/PaypalPayment";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import toast from "react-hot-toast";
 
 function Cart({ carts, total, addresses, payment_type }) {
     const { auth } = usePage().props;
+    const testAddress = useRef(null);
+    const initialOptions = {
+        currency: "PHP",
+        clientId:
+            "AdRKyqWyNs1X4S2gKH8soI6PcFQPwZymqHCZZMSOPmbiadVkMDN8hmw_kgR40K31DHDA0ASBEpHwSft0",
+        intent: "capture",
+    };
+    const styles = {
+        shape: "rect",
+        layout: "vertical",
+    };
 
-    const { data, setData, post, errors, processing } = useForm({
-        address: null,
-        payment_type: payment_type.CASH,
-    });
+    const [disable, setDisable] = useState(true);
 
-    const [address, setAddress] = useState(null);
+    const [user_address, setAddress] = useState(null);
+
     function handleAddress(e) {
-        const selected_address = addresses.find((address) => {
-            if (Number(e.target.value) == address.id) {
-                return address;
+        const selected_address = addresses.find((user_address) => {
+            if (Number(e.target.value) == user_address.id) {
+                return user_address;
             }
         });
-        setAddress(selected_address);
         if (selected_address) {
-            setData("address", selected_address.id);
+            router.post(
+                `/address/active/${auth.user.id}/${selected_address.id}`,
+                {},
+                {
+                    preserveScroll: true,
+                }
+            );
+            setAddress(selected_address);
+            setDisable(false);
+            testAddress.current = testAddress.id;
+        } else {
+            setDisable(true);
         }
     }
+    const handleSuccessOrder = () => {
+        router.post(`/online/orders/${auth.user.id}`, {
+            onSuccess: () => {
+                console.log("Inertia route posted successfully");
+                toast.success("Payment success");
+            },
+            onError: (error) => {
+                console.error("Error posting Inertia route:", error);
+            },
+        });
+    };
 
-    console.log(errors);
+    const onCreateOrder = (data, actions) => {
+        return actions.order.create({
+            purchase_units: [
+                {
+                    amount: {
+                        value: total,
+                    },
+                },
+            ],
+        });
+    };
 
-    function handleCashOrder() {
-        setData("payment_type", payment_type.CASH);
-        if (!processing) {
-            post(`/orders/${auth.user.id}`);
-        }
-    }
+    const onApprove = (data, actions) => {
+        return actions.order.capture().then((details) => handleSuccessOrder());
+    };
+
+    const onError = (error) => {
+        console.log("err", error);
+        toast.error("somethibg went wrong");
+    };
 
     return (
         <div>
@@ -98,57 +143,80 @@ function Cart({ carts, total, addresses, payment_type }) {
                                         <h2 className="font-bold text-xl">
                                             Address
                                         </h2>
-                                        {address ? (
+                                        {user_address ? (
                                             <div>
                                                 <p className="text-md font-normal uppercase">
-                                                    {address.street},{" "}
-                                                    {address.barangay},{" "}
-                                                    {address.city},{" "}
-                                                    {address.province}
+                                                    {user_address.street},{" "}
+                                                    {user_address.barangay},{" "}
+                                                    {user_address.city},{" "}
+                                                    {user_address.province}
                                                 </p>
                                             </div>
                                         ) : (
                                             <p className="text-md uppercase">
-                                                select an address to proceed
+                                                Select an Address
                                             </p>
                                         )}
                                         <select
-                                            value={address?.id}
+                                            ref={testAddress}
+                                            value={user_address?.id}
                                             onChange={(e) => handleAddress(e)}
                                             className="w-full px-4 py-2 border-2 text-md rounded-lg"
                                         >
                                             <option value="">
                                                 Select Address
                                             </option>
-                                            {addresses.map((address) => (
+                                            {addresses.map((user_address) => (
                                                 <option
-                                                    key={address.id}
-                                                    value={address.id}
+                                                    key={user_address.id}
+                                                    value={user_address.id}
                                                 >
-                                                    {address.name}
+                                                    {user_address.name}
                                                 </option>
                                             ))}
                                         </select>
-                                        {errors.address ? (
-                                            <Error>{errors.address}</Error>
-                                        ) : null}
                                     </div>
                                     <div className="space-y-2">
                                         <h2 className="font-bold text-xl">
                                             Payment
                                         </h2>
-                                        <button
-                                            onClick={() => handleCashOrder()}
-                                            className="bg-black text-white text-center w-full py-2 px-4 font-semibold rounded hover:opacity-80"
+
+                                        <PayPalScriptProvider
+                                            options={initialOptions}
                                         >
-                                            Cash
-                                        </button>
-                                        <button className="w-full px-4 py-2 bg-gray-300 border-2 rounded-lg hover:opacity-80">
+                                            <PayPalButtons
+                                                disabled={disable}
+                                                style={styles}
+                                                createOrder={onCreateOrder}
+                                                onApprove={onApprove}
+                                                onError={onError}
+                                                fundingSource="paypal"
+                                            />
+                                        </PayPalScriptProvider>
+
+                                        {/* <PaypalPayment
+                                            onCreateOrder={(data, actions) =>
+                                                onCreateOrder(data, actions)
+                                            }
+                                            onApprove={(data, actions) =>
+                                                onApprove(data, actions)
+                                            }
+                                            onError={(data, actions) =>
+                                                onError(data, actions)
+                                            }
+                                            disabled={disable}
+                                        /> */}
+                                        {/* <button
+                                            onClick={() =>
+                                                handlePaypalPayment()
+                                            }
+                                            className="w-full px-4 py-2 bg-gray-300 border-2 rounded-lg hover:opacity-80"
+                                        >
                                             <img
                                                 src={PAYPAL}
                                                 className="object-contain w-full h-5"
                                             />
-                                        </button>
+                                        </button> */}
                                     </div>
                                 </div>
                             </div>

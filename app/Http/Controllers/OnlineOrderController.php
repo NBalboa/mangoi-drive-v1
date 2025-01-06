@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Enums\IsAvailable;
+use App\Enums\OrderType;
+use App\Enums\PaymentType;
 use App\Enums\Status;
 use App\Events\OrderCreated;
 use App\Http\Requests\StoreOnlineOrderRequest;
 use App\Http\Requests\UpdateOnlineOrderStatusRequest;
+use App\Models\Address;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
@@ -19,8 +22,7 @@ class OnlineOrderController extends Controller
     public function index(Request $request)
     {
         /** @var \Illuminate\Pagination\LengthAwarePaginator $initialOrders */
-        $initialOrders = Order::with('user', 'address');
-
+        $initialOrders = Order::with('user', 'address')->where('user_id', '!=', null);
         if ($request->input('search')) {
             $search = $request->input('search');
             $initialOrders = $initialOrders->search($search)
@@ -38,8 +40,7 @@ class OnlineOrderController extends Controller
         }
         $initialOrders = $initialOrders->paginate(10)->withQueryString();
 
-
-        return Inertia::render('Admin/Orders', [
+        return Inertia::render('Admin/OnlineOrders', [
             'initialOrders' => $initialOrders,
             'OrderStatus' => [
                 'PENDING' => Status::PENDING->value,
@@ -79,48 +80,34 @@ class OnlineOrderController extends Controller
         ]);
     }
 
-    public function store(StoreOnlineOrderRequest $request, User $user)
+    public function store(User $user)
     {
-        $validated = $request->all();
-        DB::beginTransaction();
 
-        try {
+        $carts = $user->carts()->with('product')->get();
+        $address = $user->addresses()->get()->where('is_active', '=', 1)->first();
+        $carts->map(function ($cart) {
+            $product = $cart->product;
+            $cart->total = $cart->quantity * $product->price;
+        });
 
-            $carts = $user->carts()->with('product')->get();
-            $carts->map(function ($cart) {
-                $product = $cart->product;
-                $cart->total = $cart->quantity * $product->price;
-            });
+        $total = 0;
+        foreach ($carts as $cart) {
+            $total += $cart->total;
+        }
 
-            $total = 0;
-            foreach ($carts as $cart) {
-                $total += $cart->total;
-            }
+        $order = Order::create([
+            'address_id' => $address->id,
+            'user_id' => $user->id,
+            'payment_type' => PaymentType::PAYPAL->value,
+            'total' => $total,
+            'order_type' => OrderType::DELIVERY->value,
+            'amount_render' => $total,
+        ]);
 
-            $order = Order::create([
-                'address_id' => $validated['address'],
-                'user_id' => $user->id,
-                'payment_type' => $validated['payment_type'],
-                'total' => $total,
-            ]);
-
-            foreach ($carts as $cart) {
-                $product = $cart->product;
-                if ($product->is_available === IsAvailable::YES->value && $product->quantity) {
-                    if ($product->quantity >= $cart->quantity) {
-                        OrderItem::create([
-                            'order_id' => $order->id,
-                            'product_id' => $product->id,
-                            'price' => $product->price,
-                            'quantity' => $cart->quantity,
-                            'total' => $cart->total
-                        ]);
-                        $product->quantity = $product->quantity - $cart->quantity;
-                        $product->save();
-                    }
-                }
-
-                if ($product->is_available === IsAvailable::YES->value && !$product->quantity) {
+        foreach ($carts as $cart) {
+            $product = $cart->product;
+            if ($product->is_available === IsAvailable::YES->value && $product->quantity) {
+                if ($product->quantity >= $cart->quantity) {
                     OrderItem::create([
                         'order_id' => $order->id,
                         'product_id' => $product->id,
@@ -128,16 +115,23 @@ class OnlineOrderController extends Controller
                         'quantity' => $cart->quantity,
                         'total' => $cart->total
                     ]);
+                    $product->quantity = $product->quantity - $cart->quantity;
+                    $product->save();
                 }
             }
-            DB::commit();
 
-            broadcast(new OrderCreated($order));
-        } catch (\Exception $e) {
-
-            DB::rollBack();
-
-            return redirect()->back()->withErrors(['error' => $e]);
+            if ($product->is_available === IsAvailable::YES->value && !$product->quantity) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $product->id,
+                    'price' => $product->price,
+                    'quantity' => $cart->quantity,
+                    'total' => $cart->total
+                ]);
+            }
         }
+        broadcast(new OrderCreated($order));
+        $user->carts()->delete();
+        return redirect('/');
     }
 }

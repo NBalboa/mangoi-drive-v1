@@ -15,7 +15,8 @@ class Address extends Model
         "street",
         "barangay",
         "city",
-        "province"
+        "province",
+        "is_active"
     ];
 
     public function scopeSearch($query, $search)

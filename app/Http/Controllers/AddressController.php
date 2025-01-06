@@ -28,6 +28,21 @@ class AddressController extends Controller
         return back();
     }
 
+    public function active(User $user, Address $address){
+
+
+        $exist = $user->addresses()->get()->where('id', $address->id)->first()->exists();
+        if($exist){
+            $user->addresses()->update(['is_active' => 0]);
+
+            $address = $user->addresses()->get()->where('id', $address->id)->first();
+            $address->is_active = 1;
+            $address->save();
+        }
+
+        return back();
+    }
+
 
     public function edit(User $user, Address $address)
     {

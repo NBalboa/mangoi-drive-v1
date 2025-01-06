@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Admin from "../../layouts/Admin";
 import Table from "../../components/Table";
 import Content from "../../components/Content";
@@ -10,9 +10,13 @@ import TableDataHead from "../../components/TableDataHead";
 import TableData from "../../components/TableData";
 import { Link, router } from "@inertiajs/react";
 import Links from "../../components/Links";
+import ProductSearch from "../../components/ProductSearch";
 
-function Product({ products, IS_AVAILABLE }) {
-    console.log(products);
+function Product({ products, IS_AVAILABLE, categories }) {
+    const [category, setCategory] = useState("");
+    const [search, setSearch] = useState("");
+    const [available, setAvailable] = useState("");
+
     function handleAvailable(product) {
         const is_available =
             product.is_available === IS_AVAILABLE.YES
@@ -30,12 +34,38 @@ function Product({ products, IS_AVAILABLE }) {
         );
     }
 
+    function handleSearch(e) {
+        e.preventDefault();
+
+        const data = {
+            category: category,
+            search: search,
+            available: available,
+        };
+
+        console.log(data);
+
+        router.get("/products", data, {
+            preserveScroll: true,
+        });
+    }
+
     return (
         <Admin>
             <h2 className="mb-2 font-bold text-2xl sm:text-3xl md:text-4xl">
                 Products
             </h2>
             <Content>
+                <ProductSearch
+                    onHandleSubmit={handleSearch}
+                    categories={categories}
+                    category={category}
+                    setCategory={(e) => setCategory(e.target.value)}
+                    search={search}
+                    setSearch={(e) => setSearch(e.target.value)}
+                    setAvailable={(e) => setAvailable(e.target.value)}
+                    available={available}
+                />
                 <Table>
                     <TableHeads>
                         <TableHead>Image</TableHead>
@@ -97,7 +127,11 @@ function Product({ products, IS_AVAILABLE }) {
                     </TableBody>
                 </Table>
                 {products.data.length > 0 ? (
-                    <Links links={products.links} />
+                    <Links
+                        links={products.links}
+                        per_page={products.per_page}
+                        total={products.total}
+                    />
                 ) : null}
                 <div className="mt-5">
                     <Link

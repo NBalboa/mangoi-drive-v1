@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <script src="https://kit.fontawesome.com/c393acf5ae.js" crossorigin="anonymous"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id={{config("paypal.client_id")}}&currency={{config("paypal.currency")}}"></script>
     @viteReactRefresh
     @vite('resources/js/app.jsx')
     @inertiaHead

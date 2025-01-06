@@ -11,6 +11,7 @@ function CartItem({ cart }) {
                 {},
                 {
                     preserveScroll: true,
+                    preserveState: false,
                     onFinish: () => {
                         setLoading(false);
                     },
@@ -35,6 +36,7 @@ function CartItem({ cart }) {
                     {},
                     {
                         preserveScroll: true,
+                        preserveState: false,
                         onFinish: () => {
                             setLoading(false);
                         },
