@@ -54,7 +54,7 @@ class OrderController extends Controller
     public function create(Request $request)
     {
         $categories = Category::select('id', 'name')->isNotDeleted()->get();
-        $products = Product::isNotDeleted();
+        $products = Product::isNotDeleted()->isAvailable();
         $search = $request->input('search');
         $category = $request->input('category');
 
@@ -96,7 +96,6 @@ class OrderController extends Controller
             'amount_render' => $amount,
             'total' =>  $total
         ]);
-
         foreach($orders as $item){
             $product = Product::where('id', $item['id'])->first();
             if($item['is_available'] === IsAvailable::YES->value){

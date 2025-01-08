@@ -17,7 +17,11 @@ export default function Sidebar({ children }) {
                 aria-label="Sidebar"
             >
                 <SidebarLinks>
-                    <SidebarLink name="Dasboard" path="/"></SidebarLink>
+                    <SidebarLink
+                        name="Dasboard"
+                        path="/dashboard"
+                        active={"Admin/Dashboard" === component}
+                    ></SidebarLink>
                     <SidebarLink
                         name="Orders"
                         path="/orders"

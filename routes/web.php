@@ -4,6 +4,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\OnlineOrderController;
 use App\Http\Controllers\OrderController;
@@ -39,7 +40,9 @@ Route::get('/', function (Request $request) {
 
     return Inertia::render('Welcome', [
         'categories' => $categories,
-        'products' => $products
+        'products' => $products,
+        'search' => $request->input("search"),
+        'filter' => $request->input("filter")
     ]);
 })->name('home');
 
@@ -61,12 +64,15 @@ Route::get('/menu', function (Request $request) {
     }
 
 
+
     $products = $products->get();
 
 
     return Inertia::render('Menu', [
         'categories' => $categories,
-        'products' => $products
+        'products' => $products,
+        'search' => $request->input("search"),
+        'filter' => $request->input("filter")
     ]);
 })->name('menu');
 
@@ -113,6 +119,7 @@ Route::delete('/suppliers/{supplier}', [SupplierController::class, 'delete'])->n
 Route::get('/stocks/create', [StockController::class, 'create'])->name("stocks.create");
 Route::post('/stocks/create', [StockController::class, 'store'])->name('stocks.store');
 
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
 
 Route::middleware(['guest'])->group(function () {
@@ -122,6 +129,10 @@ Route::middleware(['guest'])->group(function () {
     Route::get('/login', [UserController::class, 'login'])->name('login');
     Route::post('/signin', [UserController::class, 'signin'])->name('users.signin');
 });
+
+
+
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/name', [CustomerController::class, 'name'])->name('customers.name');
@@ -142,6 +153,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/account', [UserController::class, 'account'])->name('users.account');
     Route::get('/address', [UserController::class, 'address'])->name('users.address');
+    Route::get('/my/orders', [UserController::class, 'orders'])->name('users.orders');
+    Route::get('/my/orders/{order}/items', [UserController::class, 'items'])->name('users.items');
+    Route::get('/my/orders/{order}/receipt', [UserController::class, 'receipt'])->name('users.receipt');
 
     Route::post('/address/{user}', [AddressController::class, 'create'])->name('addresses.create');
     Route::get('/address/{user}/{address}', [AddressController::class, 'edit'])->name('addresses.edit');

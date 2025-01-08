@@ -12,16 +12,6 @@ function Welcome({ categories, products }) {
         search: "",
     });
 
-    // useEffect(() => {
-    //     if (!processing) {
-    //         if (data.filter) {
-    //             handleSearch();
-    //         } else {
-    //             handleSearch();
-    //         }
-    //     }
-    // }, [data.filter]);
-
     function handleSearch(e = null) {
         if (e) {
             e.preventDefault();

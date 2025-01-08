@@ -22,12 +22,10 @@ class ProductController extends Controller
     public function detail(string $category, Product $product)
     {
         $category = Category::where('name', $category)->first();
-
         $products = Product::with('category')->where('id', '!=', $product->id)
-            ->byCategory($category)
+            ->byCategory($category->id)
             ->get();
 
-        $product->image = Storage::url($product->image);
 
 
         return Inertia::render('ProductDetails', [

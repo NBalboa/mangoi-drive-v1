@@ -18,7 +18,6 @@ function Menu({ categories, products }) {
             get("/menu", {
                 preserveScroll: true,
                 preserveState: true,
-                replace: true,
             });
         }
     }
@@ -72,7 +71,7 @@ function Menu({ categories, products }) {
                                     !data.filter
                                         ? "bg-yellow-500 text-white"
                                         : "text-yellow-500 w-full hover:bg-yellow-500 hover:text-white"
-                                } font-semibold  w-full text-center border-x-2 text-xl px-4 py-2 rounded-lg`}
+                                } font-semibold  w-full text-center border-x-2 text-xl px-4 py-2 `}
                             >
                                 All
                             </button>

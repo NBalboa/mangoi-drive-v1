@@ -1,9 +1,12 @@
 import { Link, router, usePage } from "@inertiajs/react";
 import React, { useState } from "react";
+import NavItem from "./NavItem";
 
 function NavBar() {
     const { auth } = usePage().props;
+    const { component } = usePage();
 
+    console.log(component);
     const [show, setShow] = useState(false);
     function handleLogout() {
         router.post("/logout");
@@ -18,32 +21,24 @@ function NavBar() {
                 <a href="#">Mango Drive</a>
             </h1>
             <ul className="flex font-semibold text-md gap-5  items-center">
-                <li className="hidden md:block">
-                    <Link
-                        href="/"
-                        className="text-yellow-200 hover:text-yellow-200"
-                    >
-                        Home
-                    </Link>
-                </li>
-                <li className="hidden md:block">
-                    <Link
-                        href="/menu"
-                        className="text-white hover:text-yellow-200"
-                    >
-                        Menu
-                    </Link>
-                </li>
+                <NavItem
+                    label="Home"
+                    path="/"
+                    active={"Welcome" === component}
+                />
+                <NavItem
+                    label="Menu"
+                    path="/menu"
+                    active={"Menu" === component}
+                />
 
                 {auth.user ? (
                     <>
-                        <li className="hidden md:block relative">
-                            <Link
-                                href="/cart"
-                                className="text-white hover:text-yellow-200 z-10"
-                            >
-                                Cart
-                            </Link>
+                        <NavItem
+                            label="Cart"
+                            path="/cart"
+                            active={"Cart" === component}
+                        >
                             {auth.cart_total > 0 ? (
                                 <div className="absolute -top-[10px] -right-4 h-5 w-5 flex items-center justify-center bg-red-700 rounded-full">
                                     <p className="text-white text-xs font-bold">
@@ -51,15 +46,17 @@ function NavBar() {
                                     </p>
                                 </div>
                             ) : null}
-                        </li>
-                        <li className="hidden md:block">
-                            <Link
-                                href="/account"
-                                className="text-white hover:text-yellow-200"
-                            >
-                                Account
-                            </Link>
-                        </li>
+                        </NavItem>
+                        <NavItem
+                            label="Orders"
+                            path="/my/orders"
+                            active={"MyOrders" === component}
+                        />
+                        <NavItem
+                            label="Account"
+                            path="/account"
+                            active={"Account" === component}
+                        />
                         <button
                             onClick={() => handleLogout()}
                             className="px-4 py-2 bg-yellow-600 text-white rounded hover:opacity-90"
