@@ -15,7 +15,6 @@ function StocksAdd({ suppliers, products }) {
 
     function handleSubmit(e) {
         e.preventDefault();
-        console.log(data);
 
         post("/stocks/create", {
             onSuccess: () => {

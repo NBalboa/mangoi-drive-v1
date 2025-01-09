@@ -2,10 +2,15 @@ import React, { useState } from "react";
 import TopNav from "./TopNav";
 import SidebarLinks from "./SidebarLinks";
 import SidebarLink from "./SidebarLink";
-import { usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 export default function Sidebar({ children }) {
     const [open, setOpen] = useState(false);
     const { component } = usePage();
+
+    function handleLogout() {
+        router.post("/logout");
+    }
+
     return (
         <div>
             <TopNav open={open} setOpen={setOpen} />
@@ -21,33 +26,40 @@ export default function Sidebar({ children }) {
                         name="Dasboard"
                         path="/dashboard"
                         active={"Admin/Dashboard" === component}
-                    ></SidebarLink>
+                    />
                     <SidebarLink
                         name="Orders"
                         path="/orders"
                         active={"Admin/Orders" === component}
-                    ></SidebarLink>
+                    />
                     <SidebarLink
                         name="Online Orders"
                         path="/online/orders"
                         active={"Admin/OnlineOrders" === component}
-                    ></SidebarLink>
+                    />
                     <SidebarLink
                         name="Products"
                         path="/products"
                         active={"Admin/Product" === component}
-                    ></SidebarLink>
+                    />
                     <SidebarLink
                         name="Suppliers"
                         path="/suppliers"
                         active={"Admin/Suppliers" === component}
-                    ></SidebarLink>
-
+                    />
                     <SidebarLink
                         name="Category"
                         path="/categories"
                         active={"Admin/Categories" === component}
-                    ></SidebarLink>
+                    />
+                    <li>
+                        <button
+                            onClick={() => handleLogout()}
+                            className="flex items-center p-2 text-gray-900 rounded-lg group hover:bg-gray-200 w-full"
+                        >
+                            <span className="ms-3">Logout</span>
+                        </button>
+                    </li>
                 </SidebarLinks>
             </aside>
             {children}

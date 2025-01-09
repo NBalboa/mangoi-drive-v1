@@ -6,7 +6,6 @@ function NavBar() {
     const { auth } = usePage().props;
     const { component } = usePage();
 
-    console.log(component);
     const [show, setShow] = useState(false);
     function handleLogout() {
         router.post("/logout");
@@ -26,13 +25,22 @@ function NavBar() {
                     path="/"
                     active={"Welcome" === component}
                 />
-                <NavItem
-                    label="Menu"
-                    path="/menu"
-                    active={"Menu" === component}
-                />
 
-                {auth.user ? (
+                {auth.user?.role === 0 ? (
+                    <>
+                        <NavItem label="Dashboard" path="/dashboard" />
+                    </>
+                ) : (
+                    <>
+                        <NavItem
+                            label="Menu"
+                            path="/menu"
+                            active={"Menu" === component}
+                        />
+                    </>
+                )}
+
+                {auth.user?.role === 1 ? (
                     <>
                         <NavItem
                             label="Cart"
@@ -64,26 +72,30 @@ function NavBar() {
                             Logout
                         </button>
                     </>
-                ) : (
+                ) : null}
+
+                {!auth.user ? (
                     <>
-                        <li>
-                            <Link
-                                href="/register"
-                                className="px-4 py-2 bg-yellow-600 text-white rounded hover:opacity-90"
-                            >
-                                Register
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                href="/login"
-                                className="px-4 py-2 bg-yellow-600 text-white rounded hover:opacity-90"
-                            >
-                                Login
-                            </Link>
-                        </li>
+                        <>
+                            <li>
+                                <Link
+                                    href="/register"
+                                    className="px-4 py-2 bg-yellow-600 text-white rounded hover:opacity-90"
+                                >
+                                    Register
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href="/login"
+                                    className="px-4 py-2 bg-yellow-600 text-white rounded hover:opacity-90"
+                                >
+                                    Login
+                                </Link>
+                            </li>
+                        </>
                     </>
-                )}
+                ) : null}
                 <li className="block md:hidden">
                     <button
                         onClick={() => handleShow(show)}

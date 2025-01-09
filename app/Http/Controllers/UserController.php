@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Http\Requests\SigninRequest;
 use App\Models\Address;
 use App\Models\Order;
@@ -90,9 +91,18 @@ class UserController extends Controller
         $user = User::where('email', $request->input('email'))->get()->first();
 
         if ($user && Hash::check($request->input('password'), $user->password)) {
+
             Auth::login($user);
             Session::regenerate();
-            return to_route("home");
+
+            if($user->role === UserRole::CUSTOMER->value){
+                return to_route("home");
+            }
+
+            if($user->role === UserRole::ADMIN->value){
+                return to_route('dashboard.index');
+            }
+
         } else {
             return to_route("login")->withErrors(['error' => "Invalid Email/Password"]);
         }

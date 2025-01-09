@@ -32,7 +32,6 @@ function Register() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        console.log(data);
         post("/register", {
             preserveScroll: true,
         });

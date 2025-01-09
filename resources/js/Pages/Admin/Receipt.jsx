@@ -8,7 +8,6 @@ import { toStringTitle } from "../../helpers/toStringTitle";
 import { getStringPaymentType } from "../../helpers/getStringPaymentType";
 
 function Receipt({ order }) {
-    console.table(order);
     const contentRef = useRef(null);
     const reactToPrintFn = useReactToPrint({ contentRef });
     return (
