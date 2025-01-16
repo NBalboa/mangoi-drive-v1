@@ -1,6 +1,7 @@
 import { Link, router, usePage } from "@inertiajs/react";
 import React, { useState } from "react";
 import NavItem from "./NavItem";
+import MenuLink from "./MenuLink";
 
 function NavBar() {
     const { auth } = usePage().props;
@@ -23,7 +24,7 @@ function NavBar() {
                 <NavItem
                     label="Home"
                     path="/"
-                    active={"Welcome" === component}
+                    isActive={"Welcome" === component}
                 />
 
                 {auth.user?.role === 0 ? (
@@ -35,7 +36,7 @@ function NavBar() {
                         <NavItem
                             label="Menu"
                             path="/menu"
-                            active={"Menu" === component}
+                            isActive={"Menu" === component}
                         />
                     </>
                 )}
@@ -45,7 +46,7 @@ function NavBar() {
                         <NavItem
                             label="Cart"
                             path="/cart"
-                            active={"Cart" === component}
+                            isActive={"Cart" === component}
                         >
                             {auth.cart_total > 0 ? (
                                 <div className="absolute -top-[10px] -right-4 h-5 w-5 flex items-center justify-center bg-red-700 rounded-full">
@@ -58,12 +59,12 @@ function NavBar() {
                         <NavItem
                             label="Orders"
                             path="/my/orders"
-                            active={"MyOrders" === component}
+                            isActive={"MyOrders" === component}
                         />
                         <NavItem
                             label="Account"
                             path="/account"
-                            active={"Account" === component}
+                            isActive={"Account" === component}
                         />
                         <button
                             onClick={() => handleLogout()}
@@ -77,6 +78,12 @@ function NavBar() {
                 {!auth.user ? (
                     <>
                         <>
+                            <NavItem
+                                label="Home"
+                                path="/"
+                                isActive={"Welcome" === component}
+                            />
+
                             <li>
                                 <Link
                                     href="/register"
@@ -115,30 +122,52 @@ function NavBar() {
                 }  md:hidden left-0 top-[72px] bg-black w-full py-5`}
             >
                 <ul className="flex flex-col items-center text-white text-lg gap-3 font-semibold ">
-                    <li>
-                        <a
-                            href="#"
-                            className="text-yellow-200 hover:text-yellow-200"
-                        >
-                            Home
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="#"
-                            className="text-white hover:text-yellow-200"
-                        >
-                            Menu
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="#"
-                            className="text-white hover:text-yellow-200"
-                        >
-                            Contact
-                        </a>
-                    </li>
+                    <MenuLink
+                        label="Home"
+                        path="/"
+                        isActive={"Welcome" === component}
+                    />
+
+                    {auth.user?.role === 0 ? (
+                        <>
+                            <MenuLink label="Dashboard" path="/dashboard" />
+                        </>
+                    ) : (
+                        <>
+                            <MenuLink
+                                label="Menu"
+                                path="/menu"
+                                isActive={"Menu" === component}
+                            />
+                        </>
+                    )}
+                    {auth.user?.role === 1 ? (
+                        <>
+                            <MenuLink
+                                label="Cart"
+                                path="/cart"
+                                isActive={"Cart" === component}
+                            >
+                                {auth.cart_total > 0 ? (
+                                    <div className="absolute -top-[10px] -right-4 h-5 w-5 flex items-center justify-center bg-red-700 rounded-full">
+                                        <p className="text-white text-xs font-bold">
+                                            {auth.cart_total}
+                                        </p>
+                                    </div>
+                                ) : null}
+                            </MenuLink>
+                            <MenuLink
+                                label="Orders"
+                                path="/my/orders"
+                                isActive={"MyOrders" === component}
+                            />
+                            <MenuLink
+                                label="Account"
+                                path="/account"
+                                isActive={"Account" === component}
+                            />
+                        </>
+                    ) : null}
                 </ul>
             </nav>
         </nav>
