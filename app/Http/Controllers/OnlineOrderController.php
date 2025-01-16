@@ -7,6 +7,7 @@ use App\Enums\OrderType;
 use App\Enums\PaymentType;
 use App\Enums\Status;
 use App\Events\OrderCreated;
+use App\Http\Requests\OrderMoreUpdateRequest;
 use App\Http\Requests\StoreOnlineOrderRequest;
 use App\Http\Requests\UpdateOnlineOrderStatusRequest;
 use App\Models\Address;
@@ -79,7 +80,7 @@ class OnlineOrderController extends Controller
         ]);
     }
 
-    public function store(User $user)
+    public function store(Request $request, User $user)
     {
 
         $carts = $user->carts()->with('product')->get();
@@ -93,11 +94,12 @@ class OnlineOrderController extends Controller
         foreach ($carts as $cart) {
             $total += $cart->total;
         }
+        $is_cod = $request->input('is_cod');
 
         $order = Order::create([
             'address_id' => $address->id,
             'user_id' => $user->id,
-            'payment_type' => PaymentType::PAYPAL->value,
+            'payment_type' => $is_cod ? PaymentType::CASH : PaymentType::PAYPAL->value,
             'total' => $total,
             'order_type' => OrderType::DELIVERY->value,
             'amount_render' => $total,
@@ -132,5 +134,28 @@ class OnlineOrderController extends Controller
         broadcast(new OrderCreated($order));
         $user->carts()->delete();
         return redirect('/');
+    }
+
+    public function details (Order $order) {
+        $order->load('user', 'address');
+
+        if(!$order->user_id){
+            return redirect()->route('online.orders.index');
+        }
+
+
+        return Inertia::render('Admin/OnlineOrderDetails', [
+            'order' => $order
+        ]);
+    }
+
+
+    public function more(OrderMoreUpdateRequest $requets, Order $order){
+        $data = $requets->validated();
+        $order->etd = (int) $data['etd'];
+        $order->delivery_fee = $data['fee'];
+        $order->save();
+
+        return back();
     }
 }

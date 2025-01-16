@@ -17,7 +17,9 @@ class Order extends Model
         'status',
         'total',
         'amount_render',
-        'order_type'
+        'order_type',
+        'etd',
+        'delivery_fee'
     ];
 
 
@@ -26,11 +28,13 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
+
     public function scopeStatus($query, $status)
     {
 
         return $query->where('status', '=', $status - 1);
     }
+
 
     public function scopeOrderType($query, $status){
         return $query->where('order_type', '=', $status - 1);

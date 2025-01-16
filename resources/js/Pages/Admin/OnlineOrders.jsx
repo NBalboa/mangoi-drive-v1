@@ -213,7 +213,14 @@ function Orders({ initialOrders, OrderStatus, filters }) {
                                         }
                                     />
                                 </TableData>
-                                <TableData>{order.id}</TableData>
+                                <TableData>
+                                    <Link
+                                        href={`/online/orders/details/${order.id}`}
+                                        className="text-blue-600 hover:underline"
+                                    >
+                                        {order.id}
+                                    </Link>
+                                </TableData>
                                 <TableData>
                                     {toStringTitle(order.user.first_name)}{" "}
                                     {toStringTitle(order.user.last_name)}
@@ -225,7 +232,6 @@ function Orders({ initialOrders, OrderStatus, filters }) {
                                     {order.address.city},{" "}
                                     {order.address.province}
                                 </TableData>
-
                                 <TableData>
                                     {getStringOrderStatus(order.status)}
                                 </TableData>

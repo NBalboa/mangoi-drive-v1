@@ -68,6 +68,10 @@ function MyOrders({ orders, filters }) {
                         <TableHead>Order ID</TableHead>
                         <TableHead>Address</TableHead>
                         <TableHead>Status</TableHead>
+                        <TableHead>
+                            Estimated Time of Delivery (Minutes)
+                        </TableHead>
+                        <TableHead>Delivery Fee</TableHead>
                         <TableHead>Total</TableHead>
                         <TableHead></TableHead>
                     </TableHeads>
@@ -84,6 +88,8 @@ function MyOrders({ orders, filters }) {
                                 <TableData>
                                     {getStringOrderStatus(order.status)}
                                 </TableData>
+                                <TableData>{order.etd}</TableData>
+                                <TableData>{order.delivery_fee}</TableData>
                                 <TableData>{order.total}</TableData>
                                 <TableData>
                                     <Link

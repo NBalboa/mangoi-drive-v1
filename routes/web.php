@@ -128,6 +128,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
         Route::post('/orders/create', [OrderController::class, 'store'])->name('orders.store');
         Route::put('/orders/status/{id}', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+        Route::get('/online/orders/details/{order}', [OnlineOrderController::class, 'details'])->name("onlines.orders.details");
+        Route::post('/online/orders/details/{order}', [OnlineOrderController::class, 'more'])->name("onlines.orders.details");
 
         Route::get('/orders/receipt/{order}', [ReceiptController::class, 'order'])->name('receipt.order');
 

@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 function Cart({ carts, total, addresses, payment_type }) {
     const { auth } = usePage().props;
     const testAddress = useRef(null);
+    const [payment, setPayment] = useState("");
     const initialOptions = {
         currency: "PHP",
         clientId:
@@ -47,10 +48,22 @@ function Cart({ carts, total, addresses, payment_type }) {
             setDisable(true);
         }
     }
+
+    const handleCOD = () => {
+        router.post(
+            `/online/orders/${auth.user.id}`,
+            { is_cod: true },
+            {
+                onSuccess: () => {
+                    toast.success("Payment success");
+                },
+            }
+        );
+    };
+
     const handleSuccessOrder = () => {
         router.post(`/online/orders/${auth.user.id}`, {
             onSuccess: () => {
-                console.log("Inertia route posted successfully");
                 toast.success("Payment success");
             },
             onError: (error) => {
@@ -178,45 +191,54 @@ function Cart({ carts, total, addresses, payment_type }) {
                                     </div>
                                     <div className="space-y-2">
                                         <h2 className="font-bold text-xl">
-                                            Payment
+                                            Select Payment
                                         </h2>
-
-                                        <PayPalScriptProvider
-                                            options={initialOptions}
+                                        <select
+                                            value={payment}
+                                            onChange={(e) =>
+                                                setPayment(e.target.value)
+                                            }
+                                            className="w-full px-4 py-2 border-2 text-md rounded-lg"
                                         >
-                                            <PayPalButtons
-                                                disabled={disable}
-                                                style={styles}
-                                                createOrder={onCreateOrder}
-                                                onApprove={onApprove}
-                                                onError={onError}
-                                                fundingSource="paypal"
-                                            />
-                                        </PayPalScriptProvider>
+                                            <option value="">
+                                                Select Payment
+                                            </option>
+                                            <option value="cash">COD</option>
+                                            <option value="paypal">
+                                                PAYPAL
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        {payment ? (
+                                            <h2 className="font-bold text-xl">
+                                                Payment
+                                            </h2>
+                                        ) : null}
 
-                                        {/* <PaypalPayment
-                                            onCreateOrder={(data, actions) =>
-                                                onCreateOrder(data, actions)
-                                            }
-                                            onApprove={(data, actions) =>
-                                                onApprove(data, actions)
-                                            }
-                                            onError={(data, actions) =>
-                                                onError(data, actions)
-                                            }
-                                            disabled={disable}
-                                        /> */}
-                                        {/* <button
-                                            onClick={() =>
-                                                handlePaypalPayment()
-                                            }
-                                            className="w-full px-4 py-2 bg-gray-300 border-2 rounded-lg hover:opacity-80"
-                                        >
-                                            <img
-                                                src={PAYPAL}
-                                                className="object-contain w-full h-5"
-                                            />
-                                        </button> */}
+                                        {payment && payment === "cash" ? (
+                                            <>
+                                                <button
+                                                    onClick={() => handleCOD()}
+                                                    className="px-4 py-2 rounded-lg text-white bg-yellow-600 text-md text-semibold hover:opacity-80 w-full"
+                                                >
+                                                    Cash On Delivery
+                                                </button>
+                                            </>
+                                        ) : payment && payment === "paypal" ? (
+                                            <PayPalScriptProvider
+                                                options={initialOptions}
+                                            >
+                                                <PayPalButtons
+                                                    disabled={disable}
+                                                    style={styles}
+                                                    createOrder={onCreateOrder}
+                                                    onApprove={onApprove}
+                                                    onError={onError}
+                                                    fundingSource="paypal"
+                                                />
+                                            </PayPalScriptProvider>
+                                        ) : null}
                                     </div>
                                 </div>
                             </div>

@@ -136,12 +136,9 @@ function ProductDetails({ products, product, category }) {
                                             <i className="fa-solid fa-plus"></i>
                                         </button>
                                     </div>
-                                    <button className="px-4 py-2 rounded-lg text-white bg-yellow-600 text-md text-semibold hover:opacity-80 me-5">
-                                        Buy Now
-                                    </button>
                                     <button
                                         onClick={() => handleSubmit()}
-                                        className="px-4 py-2 rounded-lg text-white bg-yellow-600 text-md text-semibold hover:opacity-80"
+                                        className="px-4 py-2 rounded-lg text-white bg-yellow-600 text-md text-semibold hover:opacity-80 font-medium"
                                     >
                                         Add to Cart
                                     </button>
