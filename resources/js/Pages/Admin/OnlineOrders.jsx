@@ -47,30 +47,30 @@ function Orders({ initialOrders, OrderStatus, filters }) {
     function handleChangeStatus() {
         const ordersChecked = orders.filter((order) => order.checked === true);
         const ids = ordersChecked.map((order) => order.id);
-
-        router.post(
-            "/online/orders/changestatus",
-            {
-                status: status,
-                orders: ids,
-            },
-            {
-                preserveScroll: true,
-                preserveState: false,
-                onError: (errors) => {
-                    if (errors?.status) {
-                        toast.error("Please select status");
-                    }
-                    if (errors?.orders) {
-                        toast.error("Please select an order");
-                    }
+        if (ids) {
+            router.post(
+                "/online/orders/changestatus",
+                {
+                    status: status,
+                    orders: ids,
                 },
-
-                onSuccess: () => {
-                    toast.success("Order updated status successfully");
-                },
-            }
-        );
+                {
+                    preserveScroll: true,
+                    preserveState: false,
+                    onError: (errors) => {
+                        if (errors?.status) {
+                            toast.error("Please select status");
+                        }
+                        if (errors?.orders) {
+                            toast.error("Please select an order");
+                        }
+                    },
+                    onSuccess: () => {
+                        toast.success("Order updated status successfully");
+                    },
+                }
+            );
+        }
     }
 
     useEffect(() => {

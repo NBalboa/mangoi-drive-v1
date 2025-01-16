@@ -59,7 +59,6 @@ class OnlineOrderController extends Controller
     public function updateOrderStatus(UpdateOnlineOrderStatusRequest $request)
     {
         $validated = $request->all();
-
         Order::whereIn('id', $validated['orders'])->update([
             'status' => $validated['status']
         ]);

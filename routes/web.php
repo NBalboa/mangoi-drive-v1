@@ -24,7 +24,8 @@ use Inertia\Inertia;
 
 
 Route::get('/', function (Request $request) {
-    $categories = Category::select('id', 'name')->get();
+    $categories = Category::select('id', 'name')->isNotDeleted()->get();
+
     $products = Product::with('category')->isNotDeleted()->isAvailable();
 
     if ($request->input("search")) {
@@ -52,7 +53,7 @@ Route::get('/', function (Request $request) {
 Route::get('/menu', function (Request $request) {
 
 
-    $categories = Category::select('id', 'name')->get();
+    $categories = Category::select('id', 'name')->isNotDeleted()->get();
     $products = Product::with('category')->isNotDeleted()->isAvailable();
 
     if ($request->input("search")) {
@@ -80,6 +81,7 @@ Route::get('/menu', function (Request $request) {
 })->name('menu');
 
 Route::get('/menus/{category}/{product}', [ProductController::class, 'detail'])->name('products.details');
+Route::post('/online/orders/changestatus', [OnlineOrderController::class, 'updateOrderStatus'])->name('online.orders.changestatus');
 
 
 Route::middleware(['guest'])->group(function () {
@@ -133,7 +135,6 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/online/orders', [OnlineOrderController::class, 'index'])->name('online.orders.index');
         Route::get('/online/orders/{order}', [OnlineOrderController::class, 'order'])->name('online.orders.order');
-        Route::post('/online/orders/changestatus', [OnlineOrderController::class, 'updateOrderStatus'])->name('online.orders.changestatus');
 
         Route::get('/products', [ProductController::class, 'index'])->name('products.index');
         Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
@@ -163,6 +164,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     });
+
+
     // Route::post('/create_order', [PaypalController::class, 'create_order'])->name('paypal.create_order');
     // Route::post('/complete', [PaypalController::class, 'complete'])->name('paypal.complete');
 });
