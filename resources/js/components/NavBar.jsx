@@ -78,12 +78,6 @@ function NavBar() {
                 {!auth.user ? (
                     <>
                         <>
-                            <NavItem
-                                label="Home"
-                                path="/"
-                                isActive={"Welcome" === component}
-                            />
-
                             <li>
                                 <Link
                                     href="/register"
