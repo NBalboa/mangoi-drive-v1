@@ -39,7 +39,7 @@ class OnlineOrderController extends Controller
             $status = $request->input('filterStatus');
             $initialOrders = $initialOrders->status($status);
         }
-        $initialOrders = $initialOrders->paginate(10)->withQueryString();
+        $initialOrders = $initialOrders->latest()->paginate(10)->withQueryString();
 
         return Inertia::render('Admin/OnlineOrders', [
             'initialOrders' => $initialOrders,
@@ -61,7 +61,7 @@ class OnlineOrderController extends Controller
     {
         $validated = $request->all();
         Order::whereIn('id', $validated['orders'])->update([
-            'status' => $validated['status']
+            'status' => (int) $validated['status'] - 1
         ]);
 
         return back();

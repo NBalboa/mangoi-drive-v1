@@ -20,7 +20,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
 
-        $orders = Order::with('items')->where('payment_type', '=', PaymentType::CASH->value);
+        $orders = Order::with('items')->where('payment_type', '=', PaymentType::CASH->value)->where('user_id', '=', null);
 
         if($request->input('search')){
             $search = $request->input('search');
@@ -38,9 +38,8 @@ class OrderController extends Controller
             $orders = $orders->orderType($order_type);
         }
 
-        $orders = $orders->paginate(10)->withQueryString();
-        // dd($orders);
-        // dd($orders->toSql(), $orders->getBindings(), $orders->get()); //this works but if i comment this line of code will return an arument errod
+        $orders = $orders->latest()->paginate(10)->withQueryString();
+
         return Inertia::render("Admin/Orders", [
             'orders'  => $orders,
             'filters' => [

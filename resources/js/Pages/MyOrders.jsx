@@ -27,6 +27,31 @@ function MyOrders({ orders, filters }) {
         });
     }
 
+    function handleCancelOrder(id) {
+        router.post(
+            "/online/orders/changestatus",
+            {
+                status: 2,
+                orders: [id],
+            },
+            {
+                preserveScroll: true,
+                preserveState: false,
+                onError: (errors) => {
+                    if (errors?.status) {
+                        toast.error("Please select status");
+                    }
+                    if (errors?.orders) {
+                        toast.error("Please select an order");
+                    }
+                },
+                onSuccess: () => {
+                    toast.success("Order updated status successfully");
+                },
+            }
+        );
+    }
+
     return (
         <User>
             <div className="space-y-5">
@@ -74,6 +99,7 @@ function MyOrders({ orders, filters }) {
                         <TableHead>Delivery Fee</TableHead>
                         <TableHead>Total</TableHead>
                         <TableHead></TableHead>
+                        <TableHead></TableHead>
                     </TableHeads>
                     <TableBody>
                         {orders?.data.map((order) => (
@@ -98,6 +124,18 @@ function MyOrders({ orders, filters }) {
                                     >
                                         Items
                                     </Link>
+                                </TableData>
+                                <TableData>
+                                    {order.status !== 1 ? (
+                                        <button
+                                            onClick={() =>
+                                                handleCancelOrder(order.id)
+                                            }
+                                            className="font-semibold px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-700"
+                                        >
+                                            Cancel
+                                        </button>
+                                    ) : null}
                                 </TableData>
                             </TableBodyRow>
                         ))}

@@ -2,15 +2,15 @@ export function getStringOrderStatus(status) {
     if (status === 0) {
         return "PENDING";
     } else if (status === 1) {
-        return "CONFIRMED";
+        return "CANCEL";
     } else if (status === 2) {
-        return "READY";
+        return "CONFIRM";
     } else if (status === 3) {
-        return "TO DELIVER";
+        return "READY";
     } else if (status === 4) {
-        return "DELIVERED";
+        return "TO DELIVER";
     } else if (status === 5) {
-        return "CANCELLED";
+        return "DELIVERED";
     } else {
         return "OPPPS";
     }

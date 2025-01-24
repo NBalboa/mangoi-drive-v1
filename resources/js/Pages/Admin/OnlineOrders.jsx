@@ -47,6 +47,8 @@ function Orders({ initialOrders, OrderStatus, filters }) {
     function handleChangeStatus() {
         const ordersChecked = orders.filter((order) => order.checked === true);
         const ids = ordersChecked.map((order) => order.id);
+
+        console.log(ids, status);
         if (ids) {
             router.post(
                 "/online/orders/changestatus",
@@ -167,14 +169,20 @@ function Orders({ initialOrders, OrderStatus, filters }) {
                         className="border-2 px-4 py-2 text-md rounded-lg uppercase"
                     >
                         <option value="">Change Status</option>
-                        <option value={OrderStatus.PENDING}>PENDING</option>
-                        <option value={OrderStatus.CONFIRMED}>Confirm</option>
-                        <option value={OrderStatus.READY}>Ready</option>
-                        <option value={OrderStatus.TO_DELIVER}>
+                        <option value={OrderStatus.PENDING + 1}>PENDING</option>
+                        <option value={OrderStatus.CONFIRMED + 1}>
+                            Confirm
+                        </option>
+                        <option value={OrderStatus.READY + 1}>Ready</option>
+                        <option value={OrderStatus.TO_DELIVER + 1}>
                             To Deliver
                         </option>
-                        <option value={OrderStatus.DELIVERED}>Delivered</option>
-                        <option value={OrderStatus.CANCELLED}>Cancel</option>
+                        <option value={OrderStatus.DELIVERED + 1}>
+                            Delivered
+                        </option>
+                        <option value={OrderStatus.CANCELLED + 1}>
+                            Cancel
+                        </option>
                     </select>
                     <button
                         onClick={() => handleChangeStatus()}

@@ -93,10 +93,11 @@ function Orders({ orders, filters }) {
                                         className="px-4 py-2 max-w-xs border-2 rounded-lg"
                                     >
                                         <option value="0">PENDING</option>
-                                        <option value="1">CONFIRMED</option>
-                                        <option value="2">READY</option>
-                                        <option value="3">TO DELIVER</option>
-                                        <option value="4">DELIVERED</option>
+                                        <option value="1">CANCEL</option>
+                                        <option value="2">CONFIRMED</option>
+                                        <option value="3">READY</option>
+                                        <option value="4">TO DELIVER</option>
+                                        <option value="5">DELIVERED</option>
                                     </select>
                                 </TableData>
                                 <TableData>
