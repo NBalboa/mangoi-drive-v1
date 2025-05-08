@@ -11,6 +11,7 @@ function Dashboard({
     month,
     year,
     week,
+    daily_sales,
 }) {
     return (
         <Admin>
@@ -26,9 +27,23 @@ function Dashboard({
                             <div>
                                 <p className="text-black text-3xl">
                                     P{total_sales}
+                                    <div className="">
+                                        <p className="text-sm">
+                                            Walk-in:{" "}
+                                            <span className="font-bold">
+                                                P{daily_sales.walk_in}
+                                            </span>
+                                        </p>
+                                        <p className="text-sm">
+                                            Online:{" "}
+                                            <span className="font-bold">
+                                                P{daily_sales.online}
+                                            </span>
+                                        </p>
+                                    </div>
                                 </p>
                                 <h3 className="text-black text-xl font-semibold break-all">
-                                    Sales
+                                    Daily Sales
                                 </h3>
                             </div>
                         </div>

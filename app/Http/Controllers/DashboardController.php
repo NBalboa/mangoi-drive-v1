@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderType;
 use App\Enums\PaymentType;
 use App\Enums\Status;
 use App\Enums\UserRole;
@@ -23,6 +24,18 @@ class DashboardController extends Controller
         $total_orders = Order::whereDate('created_at', $current_date)->where('payment_type', '=', PaymentType::CASH->value)->count();
         $total_users = User::where('role', '=', UserRole::CUSTOMER->value)->count();
 
+        $total_sales_online = Order::
+            where('status', ">=", Status::CONFIRMED->value)
+            ->where('order_type', "=", OrderType::DELIVERY->value)
+            ->whereDate('created_at', $current_date)->sum('total');
+
+
+        $total_sales_walk_in = Order::
+            where('status', ">=", Status::CONFIRMED->value)
+            ->where('order_type', "!=", OrderType::DELIVERY->value)
+            ->whereDate('created_at', $current_date)->sum('total');
+
+
 
         $week = Order::where('status', ">=", Status::CONFIRMED->value)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('total');
         $year = Order::where('status', ">=", Status::CONFIRMED->value)->whereYear('created_at', Carbon::now()->year)->sum('total');
@@ -35,7 +48,11 @@ class DashboardController extends Controller
             'total_users' => $total_users,
             'year' => $year,
             'month' => $month,
-            'week' => $week
+            'week' => $week,
+            'daily_sales' => [
+                'online' => $total_sales_online,
+                'walk_in' => $total_sales_walk_in
+            ]
         ]);
     }
 }
