@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\IsAvailable;
 use App\Enums\OrderType;
 use App\Enums\PaymentType;
+use App\Enums\Status;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderStatusRequest;
 use App\Models\Category;
@@ -30,6 +31,7 @@ class OrderController extends Controller
         if($request->input('status')){
 
             $status = $request->input('status');
+
             $orders = $orders->status((int) $status);
         }
 
@@ -38,7 +40,13 @@ class OrderController extends Controller
             $orders = $orders->orderType($order_type);
         }
 
+
         $orders = $orders->latest()->paginate(10)->withQueryString();
+
+        $orders->getCollection()->transform(function ($order) {
+            $order->formatted_date = $order->created_at->format('F d, Y');
+            return $order;
+        });
 
         return Inertia::render("Admin/Orders", [
             'orders'  => $orders,
@@ -93,7 +101,8 @@ class OrderController extends Controller
             'payment_type' => PaymentType::CASH->value,
             'order_type' => $type,
             'amount_render' => $amount,
-            'total' =>  $total
+            'total' =>  $total,
+            'status' => Status::CONFIRMED
         ]);
         foreach($orders as $item){
             $product = Product::where('id', $item['id'])->first();

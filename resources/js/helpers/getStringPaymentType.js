@@ -3,5 +3,7 @@ export function getStringPaymentType(payment_type) {
         return "CASH";
     } else if (payment_type === 1) {
         return "PAYPAL";
+    } else {
+        return "GCASH";
     }
 }

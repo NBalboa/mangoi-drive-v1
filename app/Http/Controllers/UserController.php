@@ -16,7 +16,24 @@ use Inertia\Inertia;
 class UserController extends Controller
 {
 
+    public function index() {
+        $users = User::where('role', UserRole::CUSTOMER->value)
+        ->select('id', 'first_name', 'last_name', 'is_validId','email','valid_id', 'phone') // only fetch needed fields
+        ->paginate(10) // adjust per-page limit here
+        ->through(fn ($user) => [
+            'id' => $user->id,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'email' => $user->email,
+            'is_validId' => $user->is_validId,
+            'phone' => $user->phone,
+            'valid_id' => $user->valid_id ? asset('storage/' . $user->valid_id) : null,
+        ]);
 
+        return Inertia::render('Admin/Users', [
+            'users' => $users
+        ]);
+    }
     public function account()
     {
         $user = Auth::user();
@@ -70,6 +87,8 @@ class UserController extends Controller
     public function receipt(Order $order){
         $order->load('items', 'user')->get();
 
+        $order->formatted_date = $order->created_at->format('F d, Y');
+
         return Inertia::render("MyReceipt",
         ["order" => $order]);
     }
@@ -106,6 +125,19 @@ class UserController extends Controller
         } else {
             return to_route("login")->withErrors(['error' => "Invalid Email/Password"]);
         }
+    }
+    public function validateId(Request $request){
+        $user_id = $request->input('user_id');
+        $isValidId = $request->input('is_validId');
+
+        $user = User::where('id', '=', $user_id)->first();
+
+        $user->is_validId = $isValidId;
+        $user->save();
+
+
+        return back();
+
     }
     public function logout()
     {

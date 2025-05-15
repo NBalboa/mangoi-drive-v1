@@ -26,8 +26,6 @@ class ProductController extends Controller
             ->byCategory($category->id)
             ->get();
 
-
-
         return Inertia::render('ProductDetails', [
             'products' => $products,
             'product' => $product,
@@ -95,7 +93,6 @@ class ProductController extends Controller
         if ($sold_by_quantity) {
             $request->validate([
                 'quantity' => 'required|numeric|min:0',
-                'supplier' => 'required|numeric|'
             ]);
         }
 
@@ -116,7 +113,6 @@ class ProductController extends Controller
         if ($sold_by_quantity) {
             Stock::create([
                 "product_id" => $product->id,
-                "supplier_id" => $request->input('supplier'),
                 "quantity" => $request->input('quantity')
             ]);
         }

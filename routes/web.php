@@ -165,6 +165,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/stocks/create', [StockController::class, 'store'])->name('stocks.store');
 
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+        Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+        Route::put('/users/validateId', [UserController::class, 'validateId'])->name('admin.users.index');
     });
 
 

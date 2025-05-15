@@ -15,7 +15,6 @@ return new class extends Migration
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id');
-            $table->foreignId('supplier_id');
             $table->integer('quantity');
             $table->tinyInteger("is_deleted")->default(IsDeleted::NO->value);
             $table->timestamps();

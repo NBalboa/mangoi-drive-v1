@@ -27,7 +27,8 @@ class StoreCustomerRequest extends FormRequest
             "phone" => "required|string|unique:users|min:11|max:11",
             "email" => "required|email|string|unique:users",
             "password" => "required|string|same:confirm_password|min:7",
-            "confirm_password" => "required|string|min:7"
+            "confirm_password" => "required|string|min:7",
+            "valid_id" => "required|image|mimes:png,jpg,jpeg",
         ];
     }
 }

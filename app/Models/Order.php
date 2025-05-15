@@ -19,7 +19,8 @@ class Order extends Model
         'amount_render',
         'order_type',
         'etd',
-        'delivery_fee'
+        'delivery_fee',
+        'gcash'
     ];
 
 
@@ -31,7 +32,6 @@ class Order extends Model
 
     public function scopeStatus($query, $status)
     {
-
         return $query->where('status', '=', $status - 1);
     }
 

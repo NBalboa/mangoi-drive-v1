@@ -3,7 +3,7 @@ import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import toast, { Toaster } from "react-hot-toast";
 
-function User({ children }) {
+function User({ children, isHideFooter = false }) {
     useEffect(() => {
         return () => toast.remove();
     }, []);
@@ -12,7 +12,7 @@ function User({ children }) {
             <Toaster />
             <NavBar />
             <main className="m-5">{children}</main>
-            <Footer />
+            {isHideFooter ? "" : <Footer />}
         </div>
     );
 }

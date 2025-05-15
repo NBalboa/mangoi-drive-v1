@@ -194,42 +194,6 @@ function ProductsCreate({ categories, suppliers }) {
                         ) : null}
                     </InputGroup>
 
-                    <InputGroup>
-                        {data.sold_by_quantity ? (
-                            <>
-                                <label
-                                    htmlFor="supplier"
-                                    className="block mb-2 text-sm font-medium text-gray-900"
-                                >
-                                    Supplier
-                                </label>
-                                <select
-                                    id="supplier"
-                                    name="supplier"
-                                    value={data.supplier}
-                                    onChange={(e) =>
-                                        setData("supplier", e.target.value)
-                                    }
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                >
-                                    <option value="">Choose Supplier</option>
-                                    {suppliers.map((supplier) => (
-                                        <option
-                                            key={supplier.id}
-                                            value={supplier.id}
-                                        >
-                                            {supplier.name}
-                                        </option>
-                                    ))}
-                                </select>
-                                {errors.supplier ? (
-                                    <>
-                                        <Error>{errors.supplier}</Error>
-                                    </>
-                                ) : null}
-                            </>
-                        ) : null}
-                    </InputGroup>
                     <label
                         className="block mb-2 text-sm font-medium text-gray-900"
                         htmlFor="user_avatar"
@@ -290,12 +254,6 @@ function ProductsCreate({ categories, suppliers }) {
                         className="ms-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                     >
                         Create Category
-                    </Link>
-                    <Link
-                        href="/suppliers/create"
-                        className="ms-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                    >
-                        Create Supplier
                     </Link>
                 </div>
             </Content>

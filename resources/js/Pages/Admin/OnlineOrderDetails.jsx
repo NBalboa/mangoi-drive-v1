@@ -17,7 +17,6 @@ const OnlineOrderDetails = ({ order }) => {
             preserveScroll: true,
         });
     };
-    console.log(order);
     return (
         <Admin>
             <div>
@@ -36,6 +35,12 @@ const OnlineOrderDetails = ({ order }) => {
                         {order.address.barangay}, {order.address.city},{" "}
                         {order.address.province}
                     </p>
+                    {order.gcash ? (
+                        <div className="space-y-2">
+                            <p className="text-md">GCASH Receipt</p>
+                            <img src={order.gcash} className="rounded-lg" />
+                        </div>
+                    ) : null}
                     <div>
                         <form className="space-y-2" onSubmit={handleSubmit}>
                             <div className="space-y-2">

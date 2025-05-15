@@ -20,6 +20,7 @@ return new class extends Migration
             $table->tinyInteger('status')->default(Status::PENDING->value);
             $table->tinyInteger('order_type');
             $table->integer('etd')->nullable();
+            $table->string('gcash')->nullable();
             $table->decimal('delivery_fee', 10, 2)->nullable();
             $table->decimal("total", 10, 2);
             $table->decimal("amount_render", 10,2);

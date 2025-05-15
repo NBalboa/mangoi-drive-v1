@@ -7,11 +7,15 @@ import Error from "../components/Error";
 import PaypalPayment from "../components/PaypalPayment";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import toast from "react-hot-toast";
+import FormLabel from "../components/FormLabel";
 
 function Cart({ carts, total, addresses, payment_type }) {
     const { auth } = usePage().props;
     const testAddress = useRef(null);
     const [payment, setPayment] = useState("");
+    const [previewUrl, setPreviewUrl] = useState("");
+    const [gcashImage, setGcashImage] = useState(null);
+
     const initialOptions = {
         currency: "PHP",
         clientId:
@@ -22,7 +26,7 @@ function Cart({ carts, total, addresses, payment_type }) {
         shape: "rect",
         layout: "vertical",
     };
-
+    const GCASHImageRef = useRef();
     const [disable, setDisable] = useState(true);
 
     const [user_address, setAddress] = useState(null);
@@ -52,10 +56,19 @@ function Cart({ carts, total, addresses, payment_type }) {
     const handleCOD = () => {
         router.post(
             `/online/orders/${auth.user.id}`,
-            { is_cod: true },
+            { payment_type: payment, gcash_image: gcashImage },
             {
                 onSuccess: () => {
                     toast.success("Payment success");
+                },
+                onError: (error) => {
+                    if (error.is_validId) {
+                        toast.error(error.is_validId);
+                    }
+
+                    if (error.gcash_error) {
+                        toast.error(error.gcash_error);
+                    }
                 },
             }
         );
@@ -95,7 +108,7 @@ function Cart({ carts, total, addresses, payment_type }) {
 
     return (
         <div>
-            <User>
+            <User isHideFooter={true}>
                 <div
                     className={`m-5 space-y-5 ${
                         carts.length === 1 ? "h-svh" : ""
@@ -207,7 +220,56 @@ function Cart({ carts, total, addresses, payment_type }) {
                                             <option value="paypal">
                                                 PAYPAL
                                             </option>
+                                            <option value="gcash">GCASH</option>
                                         </select>
+
+                                        {payment === "gcash" ? (
+                                            <div>
+                                                <FormLabel>
+                                                    GCASH Receipt
+                                                </FormLabel>
+
+                                                <input
+                                                    className="block mb-2 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                                                    aria-describedby="user_avatar_help"
+                                                    id="image"
+                                                    accept=".png, .jpg, .jpeg"
+                                                    type="file"
+                                                    ref={GCASHImageRef}
+                                                    onChange={(e) => {
+                                                        const file =
+                                                            e.target.files[0];
+                                                        if (file) {
+                                                            setGcashImage(file);
+                                                            const reader =
+                                                                new FileReader();
+                                                            reader.onloadend =
+                                                                () => {
+                                                                    setPreviewUrl(
+                                                                        reader.result
+                                                                    );
+                                                                };
+
+                                                            reader.readAsDataURL(
+                                                                file
+                                                            );
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                        ) : (
+                                            ""
+                                        )}
+                                        {previewUrl ? (
+                                            <>
+                                                <div className="mb-5 h-[400px] w-[200px] rounded-xl mx-auto">
+                                                    <img
+                                                        src={previewUrl}
+                                                        className="h-full w-full mt-2 rounded-lg"
+                                                    ></img>
+                                                </div>
+                                            </>
+                                        ) : null}
                                     </div>
                                     <div className="space-y-2">
                                         {payment ? (
@@ -216,13 +278,15 @@ function Cart({ carts, total, addresses, payment_type }) {
                                             </h2>
                                         ) : null}
 
-                                        {payment && payment === "cash" ? (
+                                        {payment &&
+                                        (payment === "cash" ||
+                                            payment === "gcash") ? (
                                             <>
                                                 <button
                                                     onClick={() => handleCOD()}
                                                     className="px-4 py-2 rounded-lg text-white bg-yellow-600 text-md text-semibold hover:opacity-80 w-full"
                                                 >
-                                                    Cash On Delivery
+                                                    Proceed
                                                 </button>
                                             </>
                                         ) : payment && payment === "paypal" ? (

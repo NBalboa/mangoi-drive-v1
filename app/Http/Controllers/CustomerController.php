@@ -26,6 +26,11 @@ class CustomerController extends Controller
 
     public function store(StoreCustomerRequest $request)
     {
+        if ($request->hasFile('valid_id')) {
+            $image = $request->file('valid_id');
+            $path = $image->store("products/images", "public");
+        }
+
         $user = User::create([
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
@@ -34,6 +39,7 @@ class CustomerController extends Controller
             'password' => Hash::make($request->input('password')),
             'role' => UserRole::CUSTOMER->value,
             'remember_token' => Str::random(10),
+            'valid_id' => $path
         ]);
 
         Auth::login($user);

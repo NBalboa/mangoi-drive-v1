@@ -32,14 +32,5 @@ class DatabaseSeeder extends Seeder
             'role' => UserRole::ADMIN->value,
             'remember_token' => Str::random(10),
         ]);
-        User::create([
-            'first_name' => "Super",
-            'last_name' => "Admin",
-            'phone' => "09123456788",
-            'email' => "nicko@jek2x.com",
-            'password' => Hash::make('password'),
-            'role' => UserRole::CUSTOMER->value,
-            'remember_token' => Str::random(10),
-        ]);
     }
 }

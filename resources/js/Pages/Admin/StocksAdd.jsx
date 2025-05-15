@@ -49,7 +49,7 @@ function StocksAdd({ suppliers, products }) {
                         onChange={(e) => setData("product", e.target.value)}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     >
-                        <option value="">Choose Supplier</option>
+                        <option value="">Choose Products</option>
                         {products.map((product) => (
                             <option key={product.id} value={product.id}>
                                 {product.name}
@@ -59,31 +59,6 @@ function StocksAdd({ suppliers, products }) {
                     {errors.product ? (
                         <>
                             <Error>{errors.product}</Error>
-                        </>
-                    ) : null}
-                    <label
-                        htmlFor="supplier"
-                        className="block mb-2 text-sm font-medium text-gray-900"
-                    >
-                        Supplier
-                    </label>
-                    <select
-                        id="supplier"
-                        name="supplier"
-                        value={data.supplier}
-                        onChange={(e) => setData("supplier", e.target.value)}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                    >
-                        <option value="">Choose Supplier</option>
-                        {suppliers.map((supplier) => (
-                            <option key={supplier.id} value={supplier.id}>
-                                {supplier.name}
-                            </option>
-                        ))}
-                    </select>
-                    {errors.supplier ? (
-                        <>
-                            <Error>{errors.supplier}</Error>
                         </>
                     ) : null}
                     <InputGroup>

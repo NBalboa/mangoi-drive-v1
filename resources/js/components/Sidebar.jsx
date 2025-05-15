@@ -43,14 +43,14 @@ export default function Sidebar({ children }) {
                         active={"Admin/Product" === component}
                     />
                     <SidebarLink
-                        name="Suppliers"
-                        path="/suppliers"
-                        active={"Admin/Suppliers" === component}
-                    />
-                    <SidebarLink
                         name="Category"
                         path="/categories"
                         active={"Admin/Categories" === component}
+                    />
+                    <SidebarLink
+                        name="Users"
+                        path="/users"
+                        active={"Admin/Users" === component}
                     />
                     <li>
                         <button

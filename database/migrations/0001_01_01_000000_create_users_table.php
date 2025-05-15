@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('password');
             $table->tinyInteger('role');
             $table->tinyInteger('is_deleted')->default(IsDeleted::NO->value);
+            $table->tinyInteger('is_validId')->default(0);
+            $table->string('valid_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

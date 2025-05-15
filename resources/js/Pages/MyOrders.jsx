@@ -53,7 +53,7 @@ function MyOrders({ orders, filters }) {
     }
 
     return (
-        <User>
+        <User isHideFooter={true}>
             <div className="space-y-5">
                 <h2 className="max-w-2xl text-4xl font-bold my-2">My Orders</h2>
                 <form
@@ -126,7 +126,7 @@ function MyOrders({ orders, filters }) {
                                     </Link>
                                 </TableData>
                                 <TableData>
-                                    {order.status !== 1 ? (
+                                    {order.status === 0 ? (
                                         <button
                                             onClick={() =>
                                                 handleCancelOrder(order.id)

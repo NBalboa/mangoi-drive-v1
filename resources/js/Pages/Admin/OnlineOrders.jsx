@@ -137,7 +137,7 @@ function Orders({ initialOrders, OrderStatus, filters }) {
                             </option>
                             <option value={OrderStatus.READY + 1}>Ready</option>
                             <option value={OrderStatus.TO_DELIVER + 1}>
-                                To Deliver
+                                For Deliver
                             </option>
                             <option value={OrderStatus.DELIVERED + 1}>
                                 Delivered
@@ -175,7 +175,7 @@ function Orders({ initialOrders, OrderStatus, filters }) {
                         </option>
                         <option value={OrderStatus.READY + 1}>Ready</option>
                         <option value={OrderStatus.TO_DELIVER + 1}>
-                            To Deliver
+                            For Deliver
                         </option>
                         <option value={OrderStatus.DELIVERED + 1}>
                             Delivered
@@ -206,7 +206,8 @@ function Orders({ initialOrders, OrderStatus, filters }) {
                         <TableHead>Address</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Payment</TableHead>
-                        <TableHead>Amount (P)</TableHead>
+                        <TableHead>Amount (₱)</TableHead>
+                        <TableHead>Date</TableHead>
                         <TableHead></TableHead>
                     </TableHeads>
                     <TableBody>
@@ -247,6 +248,7 @@ function Orders({ initialOrders, OrderStatus, filters }) {
                                     {getStringPaymentType(order.payment_type)}
                                 </TableData>
                                 <TableData>{order.total}</TableData>
+                                <TableData>{order.formatted_date}</TableData>
                                 <TableData>
                                     <Link
                                         href={`/items/${order.id}`}

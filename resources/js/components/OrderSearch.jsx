@@ -36,10 +36,10 @@ function OrderSearch({
                 >
                     <option value="">Status</option>
                     <option value="1">Pending</option>
-                    <option value="2">Confirm</option>
-                    <option value="3">Ready</option>
-                    <option value="4">To Deliver</option>
-                    <option value="5">Delivered</option>
+                    <option value="3">Confirm</option>
+                    <option value="4">Ready</option>
+                    <option value="5">To Deliver</option>
+                    <option value="6">Delivered</option>
                 </select>
                 <select
                     value={orderType}

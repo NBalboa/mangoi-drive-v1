@@ -30,11 +30,11 @@ class StockController extends Controller
         $product->quantity = $product->quantity + $request->input('quantity');
         $product->save();
 
-        Stock::create([
-            "supplier_id" => $request->input('supplier'),
-            "product_id" => $product->id,
-            "quantity" => $request->input('quantity')
-        ]);
+        // Stock::create([
+        //     "supplier_id" => $request->input('supplier'),
+        //     "product_id" => $product->id,
+        //     "quantity" => $request->input('quantity')
+        // ]);
 
         return back();
     }

@@ -31,6 +31,14 @@ function MyReceipt({ order }) {
                     </div>
                     <div className="flex flex-col gap-3 border-b py-6 text-xs">
                         <p className="flex justify-between">
+                            <span className="text-gray-400">Receipt Date:</span>
+                            <span>{order.formatted_date}</span>
+                        </p>
+                        <p className="flex justify-between">
+                            <span className="text-gray-400">Receipt No:</span>
+                            <span>{`#${order.id}`}</span>
+                        </p>
+                        <p className="flex justify-between">
                             <span className="text-gray-400">Order No:</span>
                             <span>{`#${order.id}`}</span>
                         </p>

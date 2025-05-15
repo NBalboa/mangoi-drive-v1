@@ -14,12 +14,12 @@ import toast from "react-hot-toast";
 import OrderSearch from "../../components/OrderSearch";
 import Links from "../../components/Links";
 import ProductSearch from "../../components/ProductSearch";
+import { numberWithCommas } from "../../helpers/numberWithCommas";
 
 function Orders({ orders, filters }) {
     const [status, setStatus] = useState(filters.status ?? "");
     const [search, setSearch] = useState(filters.search ?? "");
     const [orderType, setOrderType] = useState(filters.order_type ?? "");
-
     function handleChangeStatus(status, order) {
         const data = {
             status: status,
@@ -74,7 +74,8 @@ function Orders({ orders, filters }) {
                         <TableHead>Status</TableHead>
                         <TableHead>Order Type</TableHead>
                         <TableHead>Payment Type</TableHead>
-                        <TableHead>Total Amount (P)</TableHead>
+                        <TableHead>Grand Total (₱)</TableHead>
+                        <TableHead>Date</TableHead>
                         <TableHead></TableHead>
                     </TableHeads>
                     <TableBody>
@@ -106,7 +107,10 @@ function Orders({ orders, filters }) {
                                 <TableData>
                                     {getStringPaymentType(order.payment_type)}
                                 </TableData>
-                                <TableData>{order.total}</TableData>
+                                <TableData>
+                                    ₱{numberWithCommas(order.total)}
+                                </TableData>
+                                <TableData>{order.formatted_date}</TableData>
                                 <TableData>
                                     <Link
                                         href={`/items/${order.id}`}

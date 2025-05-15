@@ -23,7 +23,6 @@ class StoreStocksRequest extends FormRequest
     {
         return [
             "product" => "required|numeric",
-            "supplier" => "required|numeric",
             "quantity" => "required|numeric|min:0"
         ];
     }

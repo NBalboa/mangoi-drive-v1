@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import Form from "../components/Form";
@@ -18,9 +18,11 @@ function Register() {
         phone: "09",
         password: "",
         confirm_password: "",
+        valid_id: "",
     });
     const [showPassword, setShowPassword] = useState(false);
-
+    const fileInputRef = useRef();
+    const [previewUrl, setPreviewUrl] = useState("");
     function handleShowPassword() {
         setShowPassword(!showPassword);
     }
@@ -29,7 +31,7 @@ function Register() {
         const phone = e.target.value.replace(/[^0-9]/g, "");
         setData("phone", phone);
     }
-
+    console.log(errors);
     function handleSubmit(e) {
         e.preventDefault();
         post("/register", {
@@ -94,7 +96,45 @@ function Register() {
                             ) : null}
                         </div>
                         <div className="relative">
-                            <FormLabel>Password</FormLabel>
+                            <FormLabel>Valid ID</FormLabel>
+
+                            <input
+                                className="block mb-2 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                                aria-describedby="user_avatar_help"
+                                id="image"
+                                accept=".png, .jpg, .jpeg"
+                                type="file"
+                                ref={fileInputRef}
+                                onChange={(e) => {
+                                    const file = e.target.files[0];
+                                    if (file) {
+                                        setData("valid_id", file);
+                                        const reader = new FileReader();
+                                        reader.onloadend = () => {
+                                            setPreviewUrl(reader.result);
+                                        };
+
+                                        reader.readAsDataURL(file);
+                                    }
+                                }}
+                            />
+                            {errors.valid_id ? (
+                                <Error>{errors.valid_id}</Error>
+                            ) : null}
+                        </div>
+
+                        {previewUrl ? (
+                            <>
+                                <div className="mb-5 h-[200px] w-[300px] rounded-xl mx-auto">
+                                    <img
+                                        src={previewUrl}
+                                        className="h-full w-full mt-2 rounded-lg"
+                                    ></img>
+                                </div>
+                            </>
+                        ) : null}
+                        <div className="relative">
+                            <FormLabel>Confirm Password</FormLabel>
                             <FormInput
                                 type={showPassword ? "text" : "password"}
                                 data={data.password}
