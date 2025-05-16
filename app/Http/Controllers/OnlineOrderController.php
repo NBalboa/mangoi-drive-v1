@@ -111,14 +111,15 @@ class OnlineOrderController extends Controller
 
             if($user_payment_type === "gcash"){
                 $payment_type  = PaymentType::GCASH->value;
+                if($gcash_image === null){
+                    return back()->withErrors(['gcash_error' => "GCASH Image is required"]);
+                }
+                else{
+                    $path = $gcash_image->store("products/images", "public");
+                }
             }
 
-            if($gcash_image === null){
-                return back()->withErrors(['gcash_error' => "GCASH Image is required"]);
-            }
-            else{
-                $path = $gcash_image->store("products/images", "public");
-            }
+            
 
 
             $order = Order::create([
@@ -128,7 +129,7 @@ class OnlineOrderController extends Controller
                 'total' => $total,
                 'order_type' => OrderType::DELIVERY->value,
                 'amount_render' => $total,
-                'gcash' => $path
+                'gcash' => $path ?? null
             ]);
 
             foreach ($carts as $cart) {

@@ -71,7 +71,7 @@ function Orders({ orders, filters }) {
                 <Table>
                     <TableHeads>
                         <TableHead>Order ID</TableHead>
-                        <TableHead>Status</TableHead>
+                        {/* <TableHead>Status</TableHead> */}
                         <TableHead>Order Type</TableHead>
                         <TableHead>Payment Type</TableHead>
                         <TableHead>Grand Total (₱)</TableHead>
@@ -82,7 +82,7 @@ function Orders({ orders, filters }) {
                         {orders?.data.map((order) => (
                             <TableBodyRow key={order.id}>
                                 <TableData>{order.id}</TableData>
-                                <TableData>
+                                {/* <TableData>
                                     <select
                                         value={order.status}
                                         onChange={(e) =>
@@ -100,7 +100,7 @@ function Orders({ orders, filters }) {
                                         <option value="4">TO DELIVER</option>
                                         <option value="5">DELIVERED</option>
                                     </select>
-                                </TableData>
+                                </TableData> */}
                                 <TableData>
                                     {getStringOrderType(order.order_type)}
                                 </TableData>
