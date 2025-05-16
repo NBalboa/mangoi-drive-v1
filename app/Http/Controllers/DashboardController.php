@@ -29,7 +29,7 @@ class DashboardController extends Controller
 
         $total_sales = Order::where('status', ">=", Status::CONFIRMED->value)->whereDate('created_at', $current_date)->sum('total');
         $total_online_orders = Order::whereDate('created_at', $current_date)->where('user_id', '!=', null)->count();
-        $total_orders = Order::whereDate('created_at', $current_date)->where('payment_type', '=', PaymentType::CASH->value)->count();
+        $total_orders = Order::whereDate('created_at', $current_date)->where('payment_type', '=', PaymentType::CASH->value)->where('user_id', '=', null)->count();
         $total_users = User::where('role', '=', UserRole::CUSTOMER->value)->count();
 
         $total_sales_online = Order::

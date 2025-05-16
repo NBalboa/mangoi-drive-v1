@@ -14,6 +14,7 @@ import { getStringPaymentType } from "../../helpers/getStringPaymentType";
 import { getStringOrderStatus } from "../../helpers/getStringOrderStatus";
 import { toStringTitle } from "../../helpers/toStringTitle";
 import OrderSearch from "../../components/OrderSearch";
+import { numberWithCommas } from "../../helpers/numberWithCommas";
 
 function Orders({ initialOrders, OrderStatus, filters }) {
     function handleCheckOrder(id) {
@@ -113,7 +114,6 @@ function Orders({ initialOrders, OrderStatus, filters }) {
             }
         );
     }
-
     return (
         <Admin>
             <Toaster position="top-right" />
@@ -207,6 +207,7 @@ function Orders({ initialOrders, OrderStatus, filters }) {
                         <TableHead>Status</TableHead>
                         <TableHead>Payment</TableHead>
                         <TableHead>Amount (₱)</TableHead>
+                        <TableHead>Grand Total (₱)</TableHead>
                         <TableHead>Date</TableHead>
                         <TableHead></TableHead>
                     </TableHeads>
@@ -247,7 +248,9 @@ function Orders({ initialOrders, OrderStatus, filters }) {
                                 <TableData>
                                     {getStringPaymentType(order.payment_type)}
                                 </TableData>
-                                <TableData>{order.total}</TableData>
+                                <TableData>₱{numberWithCommas(order.total)}</TableData>
+                                <TableData>
+                                    ₱{numberWithCommas(Number(order.total) + (order.delivery_fee ? Number(order.delivery_fee) : 0))}</TableData>
                                 <TableData>{order.formatted_date}</TableData>
                                 <TableData>
                                     <Link

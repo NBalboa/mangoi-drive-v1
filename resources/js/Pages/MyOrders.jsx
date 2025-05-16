@@ -10,6 +10,7 @@ import TableData from "../components/TableData";
 import { getStringOrderStatus } from "../helpers/getStringOrderStatus";
 import { Link, router } from "@inertiajs/react";
 import Links from "../components/Links";
+import { numberWithCommas } from "../helpers/numberWithCommas";
 
 function MyOrders({ orders, filters }) {
     const [search, setSearch] = useState(filters.search ?? "");
@@ -96,8 +97,9 @@ function MyOrders({ orders, filters }) {
                         <TableHead>
                             Estimated Time of Delivery (Minutes)
                         </TableHead>
-                        <TableHead>Delivery Fee</TableHead>
-                        <TableHead>Total</TableHead>
+                        <TableHead>Delivery Fee (₱)</TableHead>
+                        <TableHead>Total (₱)</TableHead>
+                        <TableHead>Grand Total (₱)</TableHead>
                         <TableHead></TableHead>
                         <TableHead></TableHead>
                     </TableHeads>
@@ -115,8 +117,9 @@ function MyOrders({ orders, filters }) {
                                     {getStringOrderStatus(order.status)}
                                 </TableData>
                                 <TableData>{order.etd}</TableData>
-                                <TableData>{order.delivery_fee}</TableData>
-                                <TableData>{order.total}</TableData>
+                                <TableData>₱{numberWithCommas(order.delivery_fee)}</TableData>
+                                <TableData>₱{numberWithCommas(order.total)}</TableData>
+                                <TableData>₱{numberWithCommas(Number(order.total) + (order.delivery_fee ? Number(order.delivery_fee) : 0))}</TableData>
                                 <TableData>
                                     <Link
                                         href={`/my/orders/${order.id}/items`}

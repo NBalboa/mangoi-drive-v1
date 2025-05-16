@@ -28,7 +28,7 @@ export default function Sidebar({ children }) {
                         active={"Admin/Dashboard" === component}
                     />
                     <SidebarLink
-                        name="Orders"
+                        name="Walk-in Orders"
                         path="/orders"
                         active={"Admin/Orders" === component}
                     />
